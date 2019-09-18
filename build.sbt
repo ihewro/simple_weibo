@@ -1,5 +1,3 @@
-
-
 val scalaV = "2.12.8"
 
 val projectName = "todos2018"
