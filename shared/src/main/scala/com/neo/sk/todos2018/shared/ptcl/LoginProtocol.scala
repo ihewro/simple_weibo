@@ -7,7 +7,7 @@ package com.neo.sk.todos2018.shared.ptcl
   */
 object LoginProtocol {
 
-  case class UserLoginReq(
+  case class UserLoginAndRegisterReq(
     userName: String,
     password: String
   )

@@ -1,8 +1,7 @@
 package com.neo.sk.todos2018.models
-
 // AUTO-GENERATED Slick data model
 /** Stand-alone Slick data model for immediate use */
-object SlickTables extends {
+object  SlickTables extends {
   val profile = slick.jdbc.H2Profile
 } with SlickTables
 
@@ -10,12 +9,11 @@ object SlickTables extends {
 trait SlickTables {
   val profile: slick.jdbc.JdbcProfile
   import profile.api._
-  import slick.model.ForeignKeyAction
   // NOTE: GetResult mappers for plain SQL are only generated for tables where Slick knows how to map the types of all columns.
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = tRecordInfo.schema
+  lazy val schema: profile.SchemaDescription = tRecordInfo.schema ++ tUserInfo.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -28,7 +26,7 @@ trait SlickTables {
   /** GetResult implicit for fetching rRecordInfo objects using plain SQL queries */
   implicit def GetResultrRecordInfo(implicit e0: GR[Int], e1: GR[String], e2: GR[Long]): GR[rRecordInfo] = GR{
     prs => import prs._
-    rRecordInfo.tupled((<<[Int], <<[String], <<[String], <<[Long]))
+      rRecordInfo.tupled((<<[Int], <<[String], <<[String], <<[Long]))
   }
   /** Table description of table RECORD_INFO. Objects of this class serve as prototypes for rows in queries. */
   class tRecordInfo(_tableTag: Tag) extends profile.api.Table[rRecordInfo](_tableTag, "RECORD_INFO") {
@@ -47,4 +45,33 @@ trait SlickTables {
   }
   /** Collection-like TableQuery object for table tRecordInfo */
   lazy val tRecordInfo = new TableQuery(tag => new tRecordInfo(tag))
+
+  /** Entity class storing rows of table tUserInfo
+   *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
+   *  @param name Database column NAME SqlType(VARCHAR), Length(63,true)
+   *  @param password Database column PASSWORD SqlType(VARCHAR), Length(1023,true)
+   *  @param time Database column TIME SqlType(BIGINT) */
+  case class rUserInfo(id: Int, name: String, password: String, time: Long)
+  /** GetResult implicit for fetching rUserInfo objects using plain SQL queries */
+  implicit def GetResultrUserInfo(implicit e0: GR[Int], e1: GR[String], e2: GR[Long]): GR[rUserInfo] = GR{
+    prs => import prs._
+      rUserInfo.tupled((<<[Int], <<[String], <<[String], <<[Long]))
+  }
+  /** Table description of table USER_INFO. Objects of this class serve as prototypes for rows in queries. */
+  class tUserInfo(_tableTag: Tag) extends profile.api.Table[rUserInfo](_tableTag, "USER_INFO") {
+    def * = (id, name, password, time) <> (rUserInfo.tupled, rUserInfo.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = ((Rep.Some(id), Rep.Some(name), Rep.Some(password), Rep.Some(time))).shaped.<>({r=>import r._; _1.map(_=> rUserInfo.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column ID SqlType(INTEGER), AutoInc, PrimaryKey */
+    val id: Rep[Int] = column[Int]("ID", O.AutoInc, O.PrimaryKey)
+    /** Database column NAME SqlType(VARCHAR), Length(63,true) */
+    val name: Rep[String] = column[String]("NAME", O.Length(63,varying=true))
+    /** Database column PASSWORD SqlType(VARCHAR), Length(1023,true) */
+    val password: Rep[String] = column[String]("PASSWORD", O.Length(1023,varying=true))
+    /** Database column TIME SqlType(BIGINT) */
+    val time: Rep[Long] = column[Long]("TIME")
+  }
+  /** Collection-like TableQuery object for table tUserInfo */
+  lazy val tUserInfo = new TableQuery(tag => new tUserInfo(tag))
 }

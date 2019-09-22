@@ -1,10 +1,10 @@
 package com.neo.sk.todos2018.models.dao
 
-import org.slf4j.LoggerFactory
-import com.neo.sk.todos2018.utils.DBUtil.db
 import com.neo.sk.todos2018.models.SlickTables._
+import com.neo.sk.todos2018.utils.DBUtil.db
+import org.slf4j.LoggerFactory
 import slick.jdbc.PostgresProfile.api._
-import scala.collection.mutable
+
 import scala.concurrent.Future
 
 /**
@@ -57,8 +57,9 @@ object ToDoListDAO{
 
   def delRecord(id: Int): Future[Int] = {
     try {
-      // 待补充
-      Future.successful(1)
+      // 操作数据库删除
+      db.run(tRecordInfo.filter(_.id === id).delete)
+//      Future.successful(1)
     } catch {
       case e: Throwable =>
         log.error(s"del record error with error $e")

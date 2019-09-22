@@ -41,10 +41,10 @@ ServiceUtils extends CirceSupport {
     HttpResponse(entity = HttpEntity(ContentTypes.`application/json`, json))
   }
 
-  def dealFutureResult(future: ⇒ Future[server.Route]): server.Route = onComplete(future) {
+  def dealFutureResult(future: Future[server.Route]): server.Route = onComplete(future) {
     case Success(route) =>
       route
-    case Failure(x: DeserializationException) ⇒ reject(ValidationRejection(x.getMessage, Some(x)))
+    case Failure(x: DeserializationException) => reject(ValidationRejection(x.getMessage, Some(x)))
     case Failure(e) =>
       e.printStackTrace()
       complete("error")

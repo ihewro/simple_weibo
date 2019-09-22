@@ -66,13 +66,14 @@ trait ToDoListService extends ServiceUtils with SessionBase {
               if (r > 0) {
                 complete(SuccessRsp())
               } else {
-                complete(ErrorRsp(1000101, "add record error"))
+                complete(ErrorRsp(1000101, "删除失败"))
               }
             }
           }
       }
     }
   }
+
 
   private val getList = (path("getList") & get) {
     userAuth{ user =>
@@ -84,6 +85,8 @@ trait ToDoListService extends ServiceUtils with SessionBase {
       )
     }
   }
+
+
 
   val listRoutes: Route =
     pathPrefix("list") {

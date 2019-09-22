@@ -1,14 +1,13 @@
 package com.neo.sk.todos2018.front.pages
 
 import com.neo.sk.todos2018.front.Routes
+import com.neo.sk.todos2018.front.styles.ListStyles._
 import com.neo.sk.todos2018.front.utils.{Http, JsFunc, TimeTool}
 import com.neo.sk.todos2018.shared.ptcl.SuccessRsp
 import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.{AddRecordReq, DelRecordReq, GetListRsp, TaskRecord}
-import mhtml._
 import io.circe.generic.auto._
 import io.circe.syntax._
-import io.circe.parser._
-import com.neo.sk.todos2018.front.styles.ListStyles._
+import mhtml._
 import org.scalajs.dom
 import org.scalajs.dom.html.Input
 
@@ -25,6 +24,7 @@ object TaskList{
   val taskList = Var(List.empty[TaskRecord])
 
   def getDeleteButton(id: Int) =  <button class={deleteButton.htmlClass} onclick={()=>deleteRecord(id)}>删除</button>
+  def getCommentButton(id: Int) =  <button class={deleteButton.htmlClass} onclick={()=>commentRecord(id)}>评论</button>
 
   def addRecord: Unit = {
     val data = dom.document.getElementById("taskInput").asInstanceOf[Input].value
@@ -48,21 +48,24 @@ object TaskList{
     }
   }
 
+  def commentRecord(id: Int): Unit = {
+
+  }
+
   def deleteRecord(id: Int): Unit = {
+
     val data = DelRecordReq(id).asJson.noSpaces
     Http.postJsonAndParse[SuccessRsp](Routes.List.delRecord, data).map {
       case Right(rsp) =>
-        if(rsp.errCode == 0) {
-          JsFunc.alert("执行成功！但是现在并没有进行删除操作。")
-          getList
-        } else {
-          JsFunc.alert("删除失败！")
-          println(rsp.msg)
-        }
+        println(rsp)
+        JsFunc.alert("删除成功")
+        getList
 
       case Left(error) =>
         println(s"parse error,$error")
+
     }
+
   }
 
   def getList: Unit = {
@@ -72,7 +75,7 @@ object TaskList{
           taskList := rsp.list.get
         } else {
           JsFunc.alert(rsp.msg)
-          dom.window.location.hash = s"#/Login"
+          dom.window.location.hash = s"#/Login?id="
           println(rsp.msg)
         }
       case Left(error) =>
@@ -81,11 +84,11 @@ object TaskList{
   }
 
   val taskListRx = taskList.map {
-    case Nil => <div style ="margin: 30px; font-size: 17px;">暂无任务记录</div>
+    case Nil => <div style ="margin: 30px; font-size: 17px;">暂无微博</div>
     case list => <div style ="margin: 20px; font-size: 17px;">
       <table>
         <tr>
-          <th class={th.htmlClass}>任务</th>
+          <th class={th.htmlClass}>内容</th>
           <th class={th.htmlClass}>创建时间</th>
           <th class={th.htmlClass}>操作</th>
         </tr>
@@ -94,6 +97,7 @@ object TaskList{
           <td class={td.htmlClass}>{l.content}</td>
           <td class={td.htmlClass}>{TimeTool.dateFormatDefault(l.time)}</td>
           <td class={td.htmlClass}>{getDeleteButton(l.id)}</td>
+          <td class={td.htmlClass}>{getCommentButton(l.id)}</td>
         </tr>
       }
         }
@@ -124,7 +128,8 @@ object TaskList{
   <div>
     <div>
       <button class={logoutButton.htmlClass} onclick={()=>logout()}>退出</button></div>
-    <div style="margin:30px;font-size:25px;">任务记录</div>
+    <div style="margin:30px;font-size:25px;">我的微博</div>
+
     <div style="margin-left:30px;">
       <input id ="taskInput" class={input.htmlClass}></input>
     <button class={addButton.htmlClass} onclick={()=>addRecord}>+添加</button>
