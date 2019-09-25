@@ -183,7 +183,7 @@ object TaskList{
    getMyList
   <div class={container.htmlClass}>
     <div style="margin:30px;">
-      <div style="font-size:25px;">我的微博</div><button class={addButton.htmlClass} onclick={()=>logout()}>退出</button>
+      <div style="font-size:25px;">SIMPLE · 微博</div><button class={addButton.htmlClass} onclick={()=>logout()}>退出</button>
     </div>
     <div style="margin:30px;font-size:25px;display:none">TA的微博</div>
 

@@ -29,6 +29,19 @@ object ToDoListProtocol {
     content: String,
     time: Long,
   )
+
+  case class UserInfo(
+                     id: Int,
+                     userName: String
+                     )
+
+  case class CommentInfo(
+                         id: Int,
+                         content: String,
+                         userInfo: UserInfo,
+                         time: Long,
+                       )
+
   case class GetListRsp(
     list: Option[List[TaskRecord]],
     errCode: Int = 0,
