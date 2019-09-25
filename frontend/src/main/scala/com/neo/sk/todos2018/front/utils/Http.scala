@@ -11,6 +11,7 @@ import scala.concurrent.Future
   * User: Taoz
   * Date: 11/29/2016
   * Time: 9:41 PM
+ * http请求的一些工具
   */
 object Http {
 

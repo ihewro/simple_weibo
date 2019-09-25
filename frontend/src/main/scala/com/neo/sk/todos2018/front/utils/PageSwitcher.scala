@@ -8,6 +8,7 @@ import org.scalajs.dom.raw.Event
   * User: Taoz
   * Date: 4/15/2018
   * Time: 1:46 PM
+ * 当地址栏改变的时候，进行页面切换的
   */
 trait PageSwitcher{
 

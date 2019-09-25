@@ -35,4 +35,11 @@ object ListStyles extends StyleSheet.Inline{
   )
 
   val logoutButton = addButton + style(float.right, marginRight(5.%%))
+
+
+  var container = style(
+    display.table,
+    margin(0 px, auto),
+    textAlign.center
+  )
 }

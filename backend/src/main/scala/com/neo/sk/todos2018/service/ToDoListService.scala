@@ -7,7 +7,8 @@ import akka.util.Timeout
 import com.neo.sk.todos2018.Boot.executor
 import com.neo.sk.todos2018.models.dao.ToDoListDAO
 import com.neo.sk.todos2018.ptcl.Protocols.parseError
-import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.{AddRecordReq, DelRecordReq, GetListRsp, TaskRecord}
+import com.neo.sk.todos2018.service.SessionBase.goToCommentSession
+import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol._
 import com.neo.sk.todos2018.shared.ptcl.{ErrorRsp, SuccessRsp}
 import org.slf4j.LoggerFactory
 
@@ -86,11 +87,33 @@ trait ToDoListService extends ServiceUtils with SessionBase {
     }
   }
 
+  private val goComment = (path("goComment") & post){
+    userAuth{ user =>
+      println("开始跳转评论")
+      entity(as[Either[Error,GoToCommentReq]]){
+        case Left(error) => {
+          println(GoToCommentReq)
+          println("跳转评论2")
+          complete(parseError)
+        }
+        case Right(req) => {
+          println("跳转评论")
+          //把当前点击的评论id存到session中
+          val session = goToCommentSession(GoToCommentReq(req.id), System.currentTimeMillis())
+          addSession(session.toSessionMap){
+            println("跳转评论2333")
+            complete(SuccessRsp())
+          }
+        }
+      }
+
+    }
+  }
 
 
   val listRoutes: Route =
     pathPrefix("list") {
-      addRecord ~ delRecord ~ getList
+      addRecord ~ delRecord ~ getList ~ goComment
     }
 
 }

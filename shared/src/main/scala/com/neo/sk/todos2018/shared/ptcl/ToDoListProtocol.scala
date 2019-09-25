@@ -10,12 +10,19 @@ package com.neo.sk.todos2018.shared.ptcl
   */
 object ToDoListProtocol {
 
+  /*请求数据*/
 
   //添加记录
   case class AddRecordReq(content: String)
 
+  //跳转评论列表
+  case class GoToCommentReq(id: Int)
+
+
   case class DelRecordReq(id: Int)
 
+
+  /*返回结果数据*/
   //获得列表
   case class TaskRecord(
     id: Int,
@@ -27,5 +34,8 @@ object ToDoListProtocol {
     errCode: Int = 0,
     msg: String = "Ok"
   ) extends CommonRsp
+
+
+
 
 }

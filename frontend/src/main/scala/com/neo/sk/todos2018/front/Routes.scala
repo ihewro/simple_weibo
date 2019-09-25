@@ -15,7 +15,9 @@ object Routes {
 
   object List {
     val baseUrl = base + "/list"
-    val getList = baseUrl + "/getList"
+    val getMyList = baseUrl + "/getList"
+    val goComment = baseUrl + "/goComment"
+    val getCommentById = baseUrl+"/getCommentById"
     val addRecord = baseUrl + "/addRecord"
     val delRecord = baseUrl + "/delRecord"
   }
