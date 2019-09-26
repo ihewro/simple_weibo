@@ -56,11 +56,11 @@ lazy val frontend = (project in file("frontend"))
       "com.lihaoyi" %%% "scalatags" % "0.6.7" withSources(),
       "com.github.japgolly.scalacss" %%% "core" % "0.5.5" withSources(),
       "in.nvilla" %%% "monadic-html" % "0.4.0-RC1" withSources(),
-
+      "org.webjars" % "jquery" % "2.2.1",
+      "org.querki" %%% "jquery-facade" % "1.2"
     )
   )
   .dependsOn(sharedJs)
-
 
 
 

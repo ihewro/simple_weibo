@@ -62,34 +62,50 @@ case class Comment(commentid:Int) {
 
 
   val taskListRx = currentTask.map {
-    case Nil => <div style ="margin: 30px; font-size: 17px;">出错了！</div>
-    case list => <div style ="margin: 20px; font-size: 17px;">
-      <table>
-        <tr>
-          <th class={th.htmlClass}>内容</th>
-          <th class={th.htmlClass}>创建时间</th>
-          <th class={th.htmlClass}>点赞数</th>
-          <th class={th.htmlClass}>操作</th>
-        </tr>
+    case Nil => <div style ="margin: 30px; font-size: 17px;">加载中……</div>
+    case list =>
+      <div>
         {list.map {l =>
-        <tr>
-          <td class={td.htmlClass}>{l.content}</td>
-          <td class={td.htmlClass}>{TimeTool.dateFormatDefault(l.time)}</td>
-          <td class={td.htmlClass}>0</td>
-          <td class={td.htmlClass}>{getDeleteButton(l.id)}</td>
-          <td class={td.htmlClass}>{getCommentButton(l.id)}</td>
-          <td class={td.htmlClass}>{getLikeButton(l.id)}</td>
-        </tr>
-      }
-        }
+          <div class="mdui-card mdui-center question mdui-p-t-2">
+            <div>
+              <div class="mc-user-line">
+                <a class="avatar" href="/users/10413" style="background-image: url(&quot;https://www.mdui.org/upload/avatar/ff/12/0874da5deda2ae122d9c46d5a8e4bdb0_m.png&quot;);"></a>
+                <div class="info">
+                  <div class="username">
+                    <a href={"/todos2018#/User/" + l.id}>ihewro</a></div>
+                  <div class="headline"></div>
+                </div>
+                <div class="more">
+                  <span class="time" title="2019-09-26 17:11:16">今天 17:11</span></div>
+              </div>
+              <div class="mdui-typo content">
+                {l.content}
+              </div>
+              <div class="actions">
+                <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent">评论</button></div>
+            </div>
+            <div class="mc-loading mdui-spinner mdui-center mdui-m-y-3 mdui-hidden">
+              <div class="mdui-spinner-layer ">
+                <div class="mdui-spinner-circle-clipper mdui-spinner-left">
+                  <div class="mdui-spinner-circle"></div>
+                </div>
+                <div class="mdui-spinner-gap-patch">
+                  <div class="mdui-spinner-circle"></div>
+                </div>
+                <div class="mdui-spinner-circle-clipper mdui-spinner-right">
+                  <div class="mdui-spinner-circle"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }}
+      </div>
 
-      </table>
-
-    </div>
   }
 
   val commentRx = commentList.map{
-    case Nil => <div style ="margin: 30px; font-size: 17px;">暂无评论</div>
+    case Nil =>
+      <div class="mc-empty"><div class="title">没有人撩你</div><div class="description"></div></div>
     case list => <div style ="margin: 20px; font-size: 17px;">
       <table>
         <tr>
@@ -127,19 +143,10 @@ case class Comment(commentid:Int) {
   def app: xml.Node = {
     getCurrentRecord
     getChildCommentList
-    <div class={container.htmlClass}>
+    <div id="page-question" class="mdui-container">
       <div>
-        <div style="margin:30px;font-size:25px;">当前微博</div>
         {taskListRx}
       </div>
-
-      <div>
-        <div style="margin:30px;font-size:25px;">添加评论</div>
-      <input id ="commentInput" class={input.htmlClass}/>
-        <button class={addButton.htmlClass} onclick={()=>addComment}>+提交</button>
-      </div>
-
-      <div style="margin:30px;font-size:25px;">评论列表</div>
       {commentRx}
 
     </div>

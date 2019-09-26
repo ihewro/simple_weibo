@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContextExecutor
   * User: Taoz
   * Date: 11/16/2016
   * Time: 10:37 PM
-  *
+  * 静态资源路径的路由匹配
   * 12/09/2016:   add response compress. by zhangtao
   * 12/09/2016:   add cache support self. by zhangtao
   *
@@ -35,6 +35,10 @@ trait ResourceService {
       getFromResourceDirectory("html")
     } ~ pathPrefix("css") {
       getFromResourceDirectory("css")
+    } ~ pathPrefix("fonts"){
+      getFromResourceDirectory("fonts")
+    } ~ pathPrefix("icons"){
+      getFromResourceDirectory("icons")
     } ~
     pathPrefix("js") {
       getFromResourceDirectory("js")

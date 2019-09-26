@@ -1,7 +1,7 @@
 package com.neo.sk.todos2018.front
 
 import cats.Show
-import com.neo.sk.todos2018.front.pages.{Comment,Login, TaskList}
+import com.neo.sk.todos2018.front.pages.{Comment, Login, TaskList, User}
 import mhtml.mount
 import org.scalajs.dom
 import com.neo.sk.todos2018.front.utils.{Http, JsFunc, PageSwitcher}
@@ -22,7 +22,8 @@ object Main extends PageSwitcher {
     ls match {
       case "List" :: Nil => TaskList.app
       case "Login" :: Nil => Login.app
-      case "Comment"::id :: Nil => Comment(id.toInt).app
+      case "Detail"::id :: Nil => Comment(id.toInt).app
+      case "User"::name:: Nil => User(name).app
       case _ => Login.app
     }
 
@@ -34,7 +35,7 @@ object Main extends PageSwitcher {
       <div>
         {currentPage}
       </div>
-    mount(dom.document.body, page)
+    mount(dom.document.getElementById("page-questions"), page)
   }
 
 

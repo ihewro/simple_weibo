@@ -55,19 +55,31 @@ object Login{
 
   def app: Node =
     <div>
-      <div class = "LoginForm">
-        <h2>欢迎登陆/注册</h2>
-        <div class = "inputContent">
-          <span>用户名</span>
-          <input id = "userName"></input>
-        </div>
-        <div class = "inputContent">
-          <span>密码</span>
-          <input id = "userPassword" type = "password"></input>
-        </div>
-        <button onclick = {()=> userLoginAndRegister("login")}>登陆</button>
-        <button onclick = {()=> userLoginAndRegister("register")}>注册</button>
 
+      <div class="mc-login mdui-dialog mdui-dialog-open" style="display: block; top: 150.5px;">
+        <div class="mdui-dialog-title mdui-color-indigo">
+          欢迎登陆/注册
+        </div>
+        <form>
+          <div class="mdui-textfield mdui-textfield-floating-label mdui-textfield-has-bottom mdui-textfield-not-empty">
+            <label class="mdui-textfield-label">用户名或邮箱</label>
+            <input class="mdui-textfield-input" id="userName" name="name" type="text" required="true" />
+            <div class="mdui-textfield-error">
+              账号不能为空
+            </div>
+          </div>
+          <div class="mdui-textfield mdui-textfield-floating-label mdui-textfield-has-bottom mdui-textfield-not-empty">
+            <label class="mdui-textfield-label">密码</label>
+            <input class="mdui-textfield-input" id="userPassword" name="password" type="password" required="true" />
+            <div class="mdui-textfield-error">
+              密码不能为空
+            </div>
+          </div>
+          <div class="actions mdui-clearfix">
+            <p class="mdui-text-color-black-icon-disabled">未注册的用户将自动注册账号并登录</p>
+            <button type="button" onclick = {()=> userLoginAndRegister("login")} class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">登录</button>
+          </div>
+        </form>
       </div>
     </div>
 }
