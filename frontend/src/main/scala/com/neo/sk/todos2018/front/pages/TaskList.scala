@@ -9,7 +9,7 @@ import io.circe.generic.auto._
 import io.circe.syntax._
 import mhtml._
 import org.scalajs.dom
-import org.scalajs.dom.html.Input
+import org.scalajs.dom.html.{Input, TextArea}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 /**
@@ -28,7 +28,7 @@ object TaskList{
   def getLikeButton(id: Int) =  <button class={deleteButton.htmlClass} onclick={()=>addLike(id)}>点赞</button>
 
   def addRecord: Unit = {
-    val data = dom.document.getElementById("taskInput").asInstanceOf[Input].value
+    val data = dom.document.getElementById("taskInput").asInstanceOf[TextArea].value
     if (data == ""){
       JsFunc.alert("输入框不能为空！")
     }
@@ -62,7 +62,7 @@ object TaskList{
         println(rsp)
         if(rsp.errCode == 0){
           //跳转到评论页面
-          dom.window.location.hash = s"#/Comment"
+          dom.window.location.hash = s"#/Comment/"+id
         } else {
           JsFunc.alert(rsp.msg)
           println(rsp.msg)
@@ -124,6 +124,7 @@ object TaskList{
     case list => <div style ="margin: 20px; font-size: 17px;">
       <table>
         <tr>
+          <th class={th.htmlClass}>发布者</th>
           <th class={th.htmlClass}>内容</th>
           <th class={th.htmlClass}>创建时间</th>
           <th class={th.htmlClass}>点赞数</th>
@@ -131,6 +132,7 @@ object TaskList{
         </tr>
         {list.map {l =>
         <tr>
+          <td class={td.htmlClass}>匿名</td>
           <td class={td.htmlClass}>{l.content}</td>
           <td class={td.htmlClass}>{TimeTool.dateFormatDefault(l.time)}</td>
           <td class={td.htmlClass}>0</td>
@@ -150,7 +152,7 @@ object TaskList{
     Http.getAndParse[SuccessRsp](Routes.Login.userLogout).map{
       case Right(rsp) =>
         if(rsp.errCode == 0){
-          JsFunc.alert("退出成功")
+          JsFunc.alert("退出成功，感谢您在本站点花费的时间")
           taskList := Nil
           dom.window.location.hash = "/Login"
         }
@@ -183,20 +185,25 @@ object TaskList{
    getMyList
   <div class={container.htmlClass}>
     <div style="margin:30px;">
-      <div style="font-size:25px;">SIMPLE · 微博</div><button class={addButton.htmlClass} onclick={()=>logout()}>退出</button>
+      <div style="font-size:25px;">SIMPLE · 微博</div>
     </div>
-    <div style="margin:30px;font-size:25px;display:none">TA的微博</div>
-
-    <button class={addButton.htmlClass} onclick={()=>concenteList}>关注列表</button>
-    <button class={addButton.htmlClass} onclick={()=>fansList}>粉丝列表</button>
-
-
-    <div style="margin-left:30px;">
-      <input id ="taskInput" class={input.htmlClass}></input>
-    <button class={addButton.htmlClass} onclick={()=>addRecord}>+发表</button>
+    <div>
+      <button class={addButton.htmlClass} onclick={()=>logout()}>退出</button>
     </div>
+
+    <div style="margin-bottom:30px;margin-top:30px">
+      <button class={addButton.htmlClass} onclick={()=>logout()}>关注TA</button>
+      <button class={addButton.htmlClass} onclick={()=>concenteList}>关注列表</button>
+      <button class={addButton.htmlClass} onclick={()=>fansList}>粉丝列表</button>
+    </div>
+
 
     <div>
+      <textarea id ="taskInput" class={textArea.htmlClass}></textarea>
+    </div>
+    <button class={addButton.htmlClass} onclick={()=>addRecord}>发表</button>
+
+    <div style="margin-top:30px">
       <button class={addButton.htmlClass} onclick={()=>allList}>我的微博</button>
       <button class={addButton.htmlClass} onclick={()=>allList}>发现广场</button>
     </div>

@@ -87,6 +87,24 @@ trait ToDoListService extends ServiceUtils with SessionBase {
     }
   }
 
+  private val getRecordById = (path("getRecordById") & post){
+    userAuth{ user =>
+      entity(as[Either[Error,GoToCommentReq]]){
+        case Left(error) =>
+          log.warn(s"some error: $error")
+          complete(parseError)
+
+        case Right(req) =>
+          dealFutureResult(
+            ToDoListDAO.getRecordById(req.id).map { list =>
+              val data = list.map( r => TaskRecord(r.id, r.content, r.time)).toList
+              complete(GetListRsp(Some(data)))
+            }
+          )
+      }
+    }
+  }
+
   private val goComment = (path("goComment") & post){
     userAuth{ user =>
       println("开始跳转评论")
@@ -113,7 +131,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
 
   val listRoutes: Route =
     pathPrefix("list") {
-      addRecord ~ delRecord ~ getList ~ goComment
+      addRecord ~ delRecord ~ getList ~ goComment ~ getRecordById
     }
 
 }

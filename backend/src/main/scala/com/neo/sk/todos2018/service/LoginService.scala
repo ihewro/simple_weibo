@@ -80,6 +80,7 @@ trait LoginService extends ServiceUtils with SessionBase {
   }
 
   private  val userLogout = (path("userLogout") & get) {
+    //?Q!~
     userAuth{ _ =>
       val session=Set(SessionTypeKey,SessionKeys.name)
       removeSession(session){ctx =>

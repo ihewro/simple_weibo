@@ -4,6 +4,7 @@ package com.neo.sk.todos2018.shared
   * User: sky
   * Date: 2018/3/10
   * Time: 16:12
+ * 父类：后端给前端返回信息的结构体
   */
 package object ptcl {
 

@@ -15,13 +15,16 @@ import org.slf4j.LoggerFactory
   * User: Taoz
   * Date: 12/4/2016
   * Time: 7:57 PM
-  * 创建session的结构体
+  * 创建session的结构体，以及对session的操作
   */
 
 object SessionBase{
   private val log = LoggerFactory.getLogger(this.getClass)
 
   val SessionTypeKey = "STKey"
+  val userSessionKey: String = "userSessionKey"
+  val commentSessionKey: String = "commentSessionKey"
+
 
     object SessionKeys {
       val sessionType = "todos2018_session"
@@ -34,6 +37,7 @@ object SessionBase{
     }
 
 
+  //构造跳转评论存储的session结构体
     case class goToCommentSession(
                                  goToCommentReq: GoToCommentReq,
                                  time: Long
@@ -46,6 +50,8 @@ object SessionBase{
         )
       }
     }
+
+  //构造登录时候存储的session结构体
     case class ToDoListSession(
                                 userInfo:UserBaseInfo,
                                 time: Long
@@ -74,8 +80,9 @@ trait SessionBase extends SessionSupport with ServiceUtils{
           if(sessionMap(SessionKeys.timestamp).toLong - System.currentTimeMillis() > timeout){
             None
           }else {
+            //匹配session
             Some(ToDoListSession(
-              UserBaseInfo(sessionMap(SessionKeys.name)),
+                UserBaseInfo(sessionMap(SessionKeys.name)),
               sessionMap(SessionKeys.timestamp).toLong
             ))
           }

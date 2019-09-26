@@ -6,7 +6,8 @@ package com.neo.sk.todos2018.shared.ptcl
   * Time: 15:45
   *
   * update by zhangtao: 2019-3-23
-  *
+  * 前端给后端传递信息的结构体 req
+ * 后端给前端传递信息的结构体 rsp
   */
 object ToDoListProtocol {
 
@@ -42,6 +43,11 @@ object ToDoListProtocol {
                          time: Long,
                        )
 
+  case class GetTaskRep(
+                       info: TaskRecord,
+                       errCode: Int = 0,
+                       msg: String = "Ok"
+                       )extends CommonRsp
   case class GetListRsp(
     list: Option[List[TaskRecord]],
     errCode: Int = 0,

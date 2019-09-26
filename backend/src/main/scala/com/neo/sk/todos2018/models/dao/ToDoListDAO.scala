@@ -67,6 +67,16 @@ object ToDoListDAO{
     }
   }
 
+  def getRecordById(id: Int):Future[Seq[rRecordInfo]] = {
+    try{
+      db.run(tRecordInfo.filter(t=> t.id === id).result)
+    }catch {
+      case e: Throwable =>
+        log.error("get record error")
+        Future.successful(Nil)
+    }
+  }
+
   def getRecordList(author: String): Future[Seq[rRecordInfo]] = {
     try {
       db.run(tRecordInfo.filter(t => t.author === author).result)

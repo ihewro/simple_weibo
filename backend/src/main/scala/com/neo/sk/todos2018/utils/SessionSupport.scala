@@ -68,6 +68,7 @@ trait SessionSupport {
     case Left(_) => BasicDirectives.pass
   }
 
+  //取出session
   lazy val optionalSession: Directive1[Either[String, Map[String, String]]] =
     optionalCookie(sessionConfig.cookieName).map(c => c.map(p => p.value)).flatMap{
       case Some(data) =>

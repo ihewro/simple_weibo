@@ -20,6 +20,11 @@ object ListStyles extends StyleSheet.Inline{
     fontSize(17 px)
   )
 
+  val textArea = style(
+    width(550 px),
+    height(100 px)
+  )
+
   val addButton = style(
     width(100 px),
     height(38 px),
