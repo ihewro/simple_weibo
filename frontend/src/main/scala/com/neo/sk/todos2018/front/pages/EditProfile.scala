@@ -20,9 +20,9 @@ object EditProfile {
         </div>
 
         <div class="mdui-textfield">
-          <label class="mdui-textfield-label">选择头像</label>
-
-          <form>
+          <i class="mdui-icon material-icons">email</i>
+          <label class="mdui-textfield-label mdui-m-b-1">选择头像</label>
+          <form class="mdui-p-l-5">
             <label class="mdui-radio">
               <input type="radio" name="group1"/>
               <i class="mdui-radio-icon"></i>

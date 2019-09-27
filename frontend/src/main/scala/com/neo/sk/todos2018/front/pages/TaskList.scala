@@ -124,7 +124,10 @@ object TaskList{
   }
 
   val taskMyListRx = taskList.map {
-    case Nil => <div id="example3-tab2" style ="font-size: 17px;">暂无微博</div>
+    case Nil =>
+      <div class="mc-empty"><div class="title">暂无微博</div>
+        <div class="description">可以点击近期热门，发现更有趣的瞬间。</div>
+      </div>
     case list =>
 
       <div style="font-size: 17px;">

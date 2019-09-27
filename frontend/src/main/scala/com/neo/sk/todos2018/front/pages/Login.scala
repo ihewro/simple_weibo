@@ -57,7 +57,7 @@ object Login{
     <div>
 
       <div class="mc-login mdui-dialog mdui-dialog-open" style="display: block; top: 150.5px;">
-        <div class="mdui-dialog-title mdui-color-indigo">
+        <div class="mdui-dialog-title mdui-color-theme">
           欢迎登陆/注册
         </div>
         <form>
