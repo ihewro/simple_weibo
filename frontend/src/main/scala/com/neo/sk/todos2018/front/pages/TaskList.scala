@@ -127,7 +127,7 @@ object TaskList{
     case Nil => <div id="example3-tab2" style ="font-size: 17px;">暂无微博</div>
     case list =>
 
-      <div class="mdui-m-t-3" style="font-size: 17px;">
+      <div style="font-size: 17px;">
         {list.map {l =>
         <a class="item" href={"/todos2018#/Detail/"+l.id}>
           <div class="content">
@@ -144,7 +144,6 @@ object TaskList{
             </div>
           </div>
         </a>
-
       }
         }
 
@@ -181,21 +180,6 @@ object TaskList{
     </div>
   }
 
-  def logout(): Unit = {
-    Http.getAndParse[SuccessRsp](Routes.Login.userLogout).map{
-      case Right(rsp) =>
-        if(rsp.errCode == 0){
-          JsFunc.alert("退出成功，感谢您在本站点花费的时间")
-          taskList := Nil
-          dom.window.location.hash = "/Login"
-        }
-        else{
-          JsFunc.alert(s"退出失败：${rsp.msg}")
-        }
-      case Left(error) =>
-        JsFunc.alert(s"parse error,$error")
-    }
-  }
 
 
 
@@ -216,9 +200,9 @@ object TaskList{
         <textarea id ="taskInput" class="mdui-textfield-input" rows="4" placeholder="分享你的灵光时刻"></textarea>
         <div class="actions mdui-m-t-2"><button onclick={()=>addRecord}  class="mdui-btn mdui-btn-raised mdui-text-color-blue">发表</button></div>
       </div>
+      <div class="mdui-typo-headline answers-count">我的微博</div>
+      {taskMyListRx}
     </div>
-
-    {taskMyListRx}
   </div>
 
   }

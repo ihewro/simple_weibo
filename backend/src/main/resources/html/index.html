@@ -20,19 +20,19 @@
         <a href="javascript:;" class="mdui-typo-headline">Scala · 微博</a>
         <a href="javascript:;" class="mdui-typo-title">分享有趣瞬间</a>
         <div class="mdui-toolbar-spacer"></div>
-        <a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">exit_to_app</i></a>
-        <a href="javascript:;"  class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">account_circle</i></a>
-    </div>
-
-    <div class="mdui-tab mdui-color-theme mdui-tab-centered" mdui-tab=true>
-        <a id="myWeibo" href="#List" class="mdui-ripple mdui-ripple-white">我的微博</a>
-        <a id="recentHot" href="#Hot" class="mdui-ripple mdui-ripple-white">近期热门</a>
-        <a id="myFocus" href="#Focus" class="mdui-ripple mdui-ripple-white">我的关注</a>
-    </div>
+        <a id="exitApp" href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">exit_to_app</i></a>
+        <a id="editMy" href="javascript:;"  class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">account_circle</i></a>
 </div>
 
-<div id="page-questions" class="mdui-container main"></div>
-<script src="/todos2018/static/js/jquery-3.1.1.min.js"></script>
+<div class="mdui-tab mdui-color-theme mdui-tab-centered" mdui-tab=true>
+    <a id="myWeibo" href="#List" class="mdui-ripple mdui-ripple-white">我的微博</a>
+    <a id="recentHot" href="#Hot" class="mdui-ripple mdui-ripple-white">近期热门</a>
+    <a id="myFocus" href="#Focus" class="mdui-ripple mdui-ripple-white">我的关注</a>
+    </div>
+    </div>
+
+    <div id="page-questions" class="mdui-container main"></div>
+    <script src="/todos2018/static/js/jquery-3.1.1.min.js"></script>
 <script src="/todos2018/static/js/mdui.min.js"></script>
 
 <script type="text/javascript" src="/todos2018/static/sjsout/frontend-fastopt.js"></script>
@@ -46,12 +46,12 @@
 
     $("#recentHot").on("click", function () {
         //跳转到页面
-        window.location.hash = "/Hot"
+        window.location.hash = "/RecentHot"
     });
 
     $("#myFocus").on("click", function () {
         //跳转到页面
-        window.location.hash = "/Focus"
+        window.location.hash = "/MyFocus"
     });
 
     function showMessage(str){
