@@ -5,7 +5,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.util.Timeout
 import com.neo.sk.todos2018.Boot.executor
-import com.neo.sk.todos2018.models.dao.ToDoListDAO
+import com.neo.sk.todos2018.models.dao.{LoginDAO, ToDoListDAO}
 import com.neo.sk.todos2018.ptcl.Protocols.parseError
 import com.neo.sk.todos2018.service.SessionBase.goToCommentSession
 import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol._
@@ -78,14 +78,33 @@ trait ToDoListService extends ServiceUtils with SessionBase {
 
   private val getList = (path("getList") & get) {
     userAuth{ user =>
-      dealFutureResult(
-        ToDoListDAO.getRecordList(user.userName).map { list =>
-          val data = list.map( r => TaskRecord(r.id, r.content, r.time)).toList
-          complete(GetListRsp(Some(data)))
+      dealFutureResult2 {
+        ToDoListDAO.getRecordListByUser(user.userName).map { list =>
+          val data = list.map { r=>
+            //查询该username对象的user信息
+            println(r.author)
+            val users = for {
+              user <- LoginDAO.getUser(r.author)
+              avatar <- LoginDAO.getUserAvatar((user.get.avatarId))
+            } yield (user, avatar)
+
+            users.map {
+              users2 =>
+                val user2 = users2._1.get
+                val avatar = users2._2.get
+                TaskRecord(r.id, r.content, r.time, UserInfo(user2.id, user2.name, AvatarInfo(avatar.id, avatar.url)))
+            }
+          }
+          val rst = scala.concurrent.Future.sequence(data)
+          rst.map{
+            data =>
+              complete(GetListRsp(Some(data.toList)))
+          }
         }
-      )
+      }
     }
   }
+
 
   private val getRecordById = (path("getRecordById") & post){
     userAuth{ user =>
@@ -95,10 +114,28 @@ trait ToDoListService extends ServiceUtils with SessionBase {
           complete(parseError)
 
         case Right(req) =>
-          dealFutureResult(
+          dealFutureResult2(
             ToDoListDAO.getRecordById(req.id).map { list =>
-              val data = list.map( r => TaskRecord(r.id, r.content, r.time)).toList
-              complete(GetListRsp(Some(data)))
+              val data = list.map { r=>
+                //查询该username对象的user信息
+                println(r.author)
+                val users = for {
+                  user <- LoginDAO.getUser(r.author)
+                  avatar <- LoginDAO.getUserAvatar((user.get.avatarId))
+                } yield (user, avatar)
+
+                users.map {
+                  users2 =>
+                    val user2 = users2._1.get
+                    val avatar = users2._2.get
+                    TaskRecord(r.id, r.content, r.time, UserInfo(user2.id, user2.name, AvatarInfo(avatar.id, avatar.url)))
+                }
+              }
+              val rst = scala.concurrent.Future.sequence(data)
+              rst.map{
+                data =>
+                  complete(GetListRsp(Some(data.toList)))
+              }
             }
           )
       }

@@ -1,5 +1,6 @@
 package com.neo.sk.todos2018.models.dao
 
+import com.neo.sk.todos2018.models.Bean.BRecord
 import com.neo.sk.todos2018.models.SlickTables._
 import com.neo.sk.todos2018.utils.DBUtil.db
 import org.slf4j.LoggerFactory
@@ -69,7 +70,10 @@ object ToDoListDAO{
 
   def getRecordById(id: Int):Future[Seq[rRecordInfo]] = {
     try{
-      db.run(tRecordInfo.filter(t=> t.id === id).result)
+      db.run{
+        tRecordInfo.filter(t=> t.id === id).result
+      }
+
     }catch {
       case e: Throwable =>
         log.error("get record error")
@@ -77,7 +81,7 @@ object ToDoListDAO{
     }
   }
 
-  def getRecordList(author: String): Future[Seq[rRecordInfo]] = {
+  def getRecordListByUser(author: String): Future[Seq[rRecordInfo]] = {
     try {
       db.run(tRecordInfo.filter(t => t.author === author).result)
     } catch {

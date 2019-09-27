@@ -4,6 +4,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpResponse}
 import akka.http.scaladsl.server
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.ValidationRejection
+import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.TaskRecord
 import com.neo.sk.todos2018.utils.CirceSupport
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException
 import org.slf4j.LoggerFactory
@@ -49,6 +50,16 @@ ServiceUtils extends CirceSupport {
       e.printStackTrace()
       complete("error")
   }
+
+  def dealFutureResult2(future: Future[Future[server.Route]]): server.Route = onComplete(future) {
+    case Success(route) =>
+      dealFutureResult(route)
+    case Failure(x: DeserializationException) => reject(ValidationRejection(x.getMessage, Some(x)))
+    case Failure(e) =>
+      e.printStackTrace()
+      complete("error")
+  }
+
 
 
 }

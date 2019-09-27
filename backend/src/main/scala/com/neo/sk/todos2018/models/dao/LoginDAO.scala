@@ -1,11 +1,13 @@
 package com.neo.sk.todos2018.models.dao
 
+import akka.actor.Status.Failure
 import com.neo.sk.todos2018.models.SlickTables.{rUserInfo, tRecordInfo, tUserInfo, _}
 import com.neo.sk.todos2018.utils.DBUtil.db
 import org.slf4j.LoggerFactory
 import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.Future
+import scala.xml.Null
 
 object LoginDAO {
 
@@ -42,14 +44,29 @@ object LoginDAO {
 
   }
 
-
-  def getRecordList(author: String): Future[Seq[rRecordInfo]] = {
+  def getUser(name:String): Future[Option[rUserInfo]] = {
     try {
-      db.run(tRecordInfo.filter(t => t.author === author).result)
+      db.run {
+        tUserInfo.filter(t => t.name === name).result
+        tUserInfo.result.headOption
+      }
     } catch {
       case e: Throwable =>
-        log.error(s"get recordList error with error $e")
-        Future.successful(Nil)
+        log.error(s"get user error with error $e")
+        Future.successful(None)
+    }
+  }
+
+  def getUserAvatar(avatarid: Int): Future[Option[rAvatar]] = {
+    try{
+      db.run{
+        tAvatar.filter(t => t.id === avatarid).result
+        tAvatar.result.headOption
+      }
+    }catch {
+      case e: Throwable =>
+        log.error(s"get avatar error $e")
+        Future.successful(None)
     }
   }
 

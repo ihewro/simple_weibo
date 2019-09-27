@@ -43,6 +43,9 @@ trait ResourceService {
     pathPrefix("js") {
       getFromResourceDirectory("js")
     } ~
+    pathPrefix("avatar"){
+      getFromResourceDirectory("avatar")
+    } ~
     pathPrefix("sjsout") {
       getFromResourceDirectory("sjsout")
     } ~

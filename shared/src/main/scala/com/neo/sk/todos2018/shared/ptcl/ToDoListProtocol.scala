@@ -29,13 +29,19 @@ object ToDoListProtocol {
     id: Int,
     content: String,
     time: Long,
+    userInfo: UserInfo
   )
 
   case class UserInfo(
                      id: Int,
-                     userName: String
+                     userName: String,
+                     avatar: AvatarInfo
                      )
 
+  case class AvatarInfo(
+                   id: Int,
+                   url: String
+                   )
   case class CommentInfo(
                          id: Int,
                          content: String,

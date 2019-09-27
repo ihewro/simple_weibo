@@ -1,5 +1,7 @@
 package com.neo.sk.todos2018.front.pages
 
+import java.util.concurrent.TimeUnit
+
 import com.neo.sk.todos2018.front.Routes
 import com.neo.sk.todos2018.front.styles.ListStyles._
 import com.neo.sk.todos2018.front.utils.{Http, JsFunc, TimeTool}
@@ -133,16 +135,17 @@ object TaskList{
       <div style="font-size: 17px;">
         {list.map {l =>
         <a class="item" href={"/todos2018#/Detail/"+l.id}>
+          <div class="avatar" style={"background-image: url("+l.userInfo.avatar.url+");"}></div>
           <div class="content">
             <div class="title">
               {l.content}
             </div>
             <div class="meta">
               <div class="username">
-                ihewro
+                {l.userInfo.userName}
               </div>
               <div class="answer_time" title="2019-09-26 17:11:16">
-                发布于 {l.time}
+                发布于 {TimeTool.dateFormatDefault(l.time)}
               </div>
             </div>
           </div>
