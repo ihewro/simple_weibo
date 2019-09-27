@@ -1,23 +1,15 @@
 package com.neo.sk.todos2018.front.pages
 
 import com.neo.sk.todos2018.front.Routes
-import com.neo.sk.todos2018.front.pages.TaskList.{getCommentButton, getDeleteButton, getLikeButton, getMyList, taskList}
-import com.neo.sk.todos2018.front.styles.ListStyles.{addButton, container, input, td, th}
+import com.neo.sk.todos2018.front.pages.TaskList.{getDeleteButton, getLikeButton}
+import com.neo.sk.todos2018.front.styles.ListStyles.{td, th}
 import com.neo.sk.todos2018.front.utils.{Http, TimeTool}
 import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.{CommentInfo, GetListRsp, GoToCommentReq, TaskRecord}
 import io.circe.generic.auto._
 import io.circe.syntax._
 import mhtml.Var
-import com.neo.sk.todos2018.front.Routes
-import com.neo.sk.todos2018.front.styles.ListStyles._
-import com.neo.sk.todos2018.front.utils.{Http, JsFunc, TimeTool}
-import com.neo.sk.todos2018.shared.ptcl.SuccessRsp
-import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.{AddRecordReq, DelRecordReq, GetListRsp, GoToCommentReq, TaskRecord}
-import io.circe.generic.auto._
-import io.circe.syntax._
-import mhtml._
+import org.querki.jquery._
 import org.scalajs.dom
-import org.scalajs.dom.html.Input
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -46,6 +38,8 @@ case class Comment(commentid:Int) {
 
   def getChildCommentList: Unit ={
     //
+
+
   }
 
   def addLike: Unit ={
@@ -82,7 +76,9 @@ case class Comment(commentid:Int) {
                 {l.content}
               </div>
               <div class="actions">
-                <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent">评论</button></div>
+                <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent">点赞</button>
+                <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent">评论</button>
+              </div>
             </div>
             <div class="mc-loading mdui-spinner mdui-center mdui-m-y-3 mdui-hidden">
               <div class="mdui-spinner-layer ">

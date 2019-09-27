@@ -22,7 +22,7 @@ object JsFunc extends js.Object{
 
   def prompt(str: String, placehold: String) : String = js.native
 
-
+  def showMessage(str: String): Unit = js.native
 
 
 }

@@ -27,10 +27,12 @@ object TaskList{
   def getCommentButton(id: Int) =  <button class={deleteButton.htmlClass} onclick={()=>commentRecord(id)}>评论</button>
   def getLikeButton(id: Int) =  <button class={deleteButton.htmlClass} onclick={()=>addLike(id)}>点赞</button>
 
+
+
   def addRecord: Unit = {
     val data = dom.document.getElementById("taskInput").asInstanceOf[TextArea].value
     if (data == ""){
-      JsFunc.alert("输入框不能为空！")
+      JsFunc.showMessage("还没填写任何内容！")
     }
     else{
       Http.postJsonAndParse[SuccessRsp](Routes.List.addRecord, AddRecordReq(data).asJson.noSpaces).map {
@@ -122,10 +124,10 @@ object TaskList{
   }
 
   val taskMyListRx = taskList.map {
-    case Nil => <div id="example3-tab2" style ="margin: 30px; font-size: 17px;">暂无微博</div>
+    case Nil => <div id="example3-tab2" style ="font-size: 17px;">暂无微博</div>
     case list =>
 
-      <div style ="margin: 20px; font-size: 17px;">
+      <div class="mdui-m-t-3" style="font-size: 17px;">
         {list.map {l =>
         <a class="item" href={"/todos2018#/Detail/"+l.id}>
           <div class="content">
@@ -209,31 +211,13 @@ object TaskList{
    getMyList
   <div>
 
-    <div>
-      <button id="submitButton" onclick={()=>logout} value="记录" class=" mdui-ripple  mdui-btn mdui-btn-raised mdui-center">个人主页</button>
-      <button id="submitButton" onclick={()=>logout} value="记录" class=" mdui-ripple  mdui-btn mdui-btn-raised mdui-center">退出</button>
-    </div>
-
-    <div>
-      <textarea id ="taskInput" class="mdui-textfield-input" rows="4" placeholder="Message"></textarea>
-    </div>
-    <button  onclick={()=>addRecord} value="记录" class=" mdui-ripple  mdui-btn mdui-btn-raised mdui-center">
-    发表
-    </button>
-
-    <div style="margin-top:30px">
-      <div class="mdui-bottom-nav mdui-bottom-nav-text-auto">
-        <a onclick={()=> getMyList()} class="mdui-ripple mdui-bottom-nav-active">
-          <i class="mdui-icon material-icons">live_tv</i>
-          <label>我的微博</label>
-        </a>
-
-        <a onclick={()=> getMyList()} class="mdui-ripple">
-          <i class="mdui-icon material-icons">music_note</i>
-          <label>发现广场</label>
-        </a>
+    <div id="page-question">
+      <div class="mdui-card mdui-center question mdui-p-t-3 mdui-p-b-3">
+        <textarea id ="taskInput" class="mdui-textfield-input" rows="4" placeholder="分享你的灵光时刻"></textarea>
+        <div class="actions mdui-m-t-2"><button onclick={()=>addRecord}  class="mdui-btn mdui-btn-raised mdui-text-color-blue">发表</button></div>
       </div>
     </div>
+
     {taskMyListRx}
   </div>
 
