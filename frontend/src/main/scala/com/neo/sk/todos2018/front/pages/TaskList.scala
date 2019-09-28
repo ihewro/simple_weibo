@@ -9,11 +9,11 @@ import com.neo.sk.todos2018.shared.ptcl.SuccessRsp
 import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.{AddRecordReq, DelRecordReq, GetListRsp, GoToCommentReq, TaskRecord}
 import io.circe.generic.auto._
 import io.circe.syntax._
+import scala.concurrent.ExecutionContext.Implicits.global
 import mhtml._
 import org.scalajs.dom
 import org.scalajs.dom.html.{Input, TextArea}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.xml.Elem
 /**
   * Created by haoshuhan on 2018/6/4.
@@ -73,7 +73,7 @@ object TaskList{
 
   def getMyList: Unit = {
     println("getMyList")
-    Http.getAndParse[GetListRsp](Routes.List.getMyList).map {
+    Http.getAndParse[GetListRsp](Routes.List.getRecordListByLoginUser).map {
       case Right(rsp) =>
         if(rsp.errCode == 0){
           taskList := rsp.list.get
@@ -87,20 +87,6 @@ object TaskList{
     }
   }
 
-  def getAllList: Unit = {
-    Http.getAndParse[GetListRsp](Routes.List.getMyList).map {
-      case Right(rsp) =>
-        if(rsp.errCode == 0){
-          taskList := rsp.list.get
-        } else {
-          JsFunc.alert(rsp.msg)
-          dom.window.location.hash = s"#/Login"
-          println(rsp.msg)
-        }
-      case Left(error) =>
-        println(s"get task list error,$error")
-    }
-  }
 
   /**
    * 根据微博记录返回一个HTML node 内容

@@ -17,6 +17,7 @@ import scala.xml.{Elem, Node}
 object RecentHot {
 
   val recentTaskList = Var(List.empty[TaskRecord])
+  val recentTaskListRX = returnRecordRX(recentTaskList)
 
   def getRecentHot(): Unit ={
     Http.getAndParse[GetListRsp](Routes.List.getRecentHotList).map{
@@ -38,7 +39,7 @@ object RecentHot {
   def app:Node = {
     getRecentHot()
     <div id="page-questions" class="mdui-container main">
-      {recentTaskList}
+      {recentTaskListRX}
     </div>
   }
 }

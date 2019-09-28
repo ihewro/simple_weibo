@@ -63,7 +63,6 @@ object ToDoListDAO{
     try {
       // 操作数据库删除
       db.run(tRecordInfo.filter(_.id === id).delete)
-//      Future.successful(1)
     } catch {
       case e: Throwable =>
         log.error(s"del record error with error $e")
@@ -85,11 +84,16 @@ object ToDoListDAO{
   }
 
   def getFocusRecordByUser(id:Int):Future[Seq[rRecordInfo]] = {
-
-    for{
-     j <-  db.run{tUserRelationship.filter(t=> t.dageId === id).result}
-     i <- db.run{tRecordInfo.filter(t=> j.contains(t.userid.asColumnOf[Int])).result}
-    }yield i
+    try {
+      val result = for{
+        j <-  tUserRelationship
+        i <- tRecordInfo if j.xiaodiId == i.userid
+      }yield i
+      db.run(result.result)
+    }catch {
+      case  e: Throwable =>
+        Future.successful(Nil)
+    }
   }
 
 
@@ -104,7 +108,7 @@ object ToDoListDAO{
     }
   }
 
-  def getRecentHotList():Future[Seq[rRecordInfo]]= {
+  def getRecentHotList:Future[Seq[rRecordInfo]]= {
     try {
       db.run(tRecordInfo.sortBy(t=> t.time).result)//按照时间排序
     }catch {

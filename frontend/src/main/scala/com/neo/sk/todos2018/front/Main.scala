@@ -24,7 +24,7 @@ object Main extends PageSwitcher {
       case "List" :: Nil => TaskList.app
       case "Login" :: Nil => Login.app
       case "Detail"::id :: Nil => Comment(id.toInt).app
-      case "User"::name:: Nil => User(name).app
+      case "User"::name:: Nil => User(name.toInt).app
       case "MyFocus"::Nil => MyFocus.app
       case "RecentHot"::Nil => RecentHot.app
       case "EditProfile"::Nil => EditProfile.app

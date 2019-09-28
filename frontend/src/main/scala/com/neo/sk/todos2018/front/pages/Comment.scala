@@ -16,10 +16,13 @@ case class Comment(recordId:Int) {
 
   val url = "#/" + "Comment"
 
-
+  val loginName = Var("")
+  val userName = Var("")
   val commentList = Var(List.empty[CommentInfo])
 
   val currentTask = Var(List.empty[TaskRecord])
+  val likedUserList = Var(List.empty[UserInfo])
+  val isLiked = Var(false)
 
   def getCurrentRecord: Unit ={
     println("评论id"+recordId)
@@ -27,13 +30,29 @@ case class Comment(recordId:Int) {
     Http.postJsonAndParse[GetListRsp](Routes.List.getRecordById,data).map{
       case Right(rep) =>
         currentTask := rep.list.get
+        userName := rep.list.get.head.userInfo.userName
       case Left(error) =>
         println(s"get  error,$error")
     }
   }
 
-  def getLikeListById: Unit ={
+  def getLikedUserListByRecordId: Unit ={
+    val data = GoToCommentReq(recordId).asJson.noSpaces
     //获取某篇微博的所有点赞用户，同时也要返回当前登录用户与该微博发布者的关系，是同一个人还是已经点赞过了
+    Http.postJsonAndParse[GetLikedUserListRsp](Routes.User.getLikedUserListByRecordId,data).map{
+      case Right(rsp) =>
+        if (rsp.errCode == 0){
+          likedUserList := rsp.list.get
+          isLiked := rsp.isLike
+        }else{
+          JsFunc.alert(rsp.msg)
+          dom.window.location.hash = s"#/Login"
+          println(rsp.msg)
+        }
+      case Left(error) =>
+        println(s"get  error,$error")
+
+    }
   }
 
   def getChildCommentList: Unit ={
@@ -49,10 +68,30 @@ case class Comment(recordId:Int) {
 
   def addWeiboLike: Unit ={
     //给微博添加点赞
+    val data = GoToCommentReq(recordId).asJson.noSpaces
+    Http.postJsonAndParse[SuccessRsp](Routes.User.addLike,data).map{
+      case Right(rsp) =>
+        if (rsp.errCode == 0){
+          //点赞成功
+          JsFunc.showMessage("点赞成功")
+          getLikedUserListByRecordId
+        }
+    }
   }
 
+  def cancelWebLike: Unit = {
+    val data = GoToCommentReq(recordId).asJson.noSpaces
+    Http.postJsonAndParse[SuccessRsp](Routes.User.cancelLike,data).map{
+      case Right(rsp) =>
+        if (rsp.errCode == 0){
+          //点赞成功
+          JsFunc.showMessage("取消点赞成功")
+          getLikedUserListByRecordId
+        }
+    }
+  }
 
-  def deleteRecord(id: Int): Unit = {
+  def deleteRecord(): Unit = {
     //删除该微博
     val data = GoToCommentReq(recordId).asJson.noSpaces
     Http.postJsonAndParse[SuccessRsp](Routes.List.delRecord, data).map {
@@ -76,13 +115,52 @@ case class Comment(recordId:Int) {
         if (rsp.errCode == 0){
           JsFunc.alert("添加成功")
           getChildCommentList
+        }else{
+          JsFunc.alert(rsp.msg)
+          dom.window.location.hash = s"#/Login"
+          println(rsp.msg)
         }
       case Left(error) =>
         println(s"parse error,$error")
     }
   }
 
+  val likedUserListRx = likedUserList.map{
+    case Nil =>
+      <div></div>
+    case list =>
+      <div class="mdui-p-y-3">
+        {list.map{
+        l =>
+          <a class="avatar">
+            <img src={l.avatar.url} />
+          </a>
+        }}
+        <span class="mdui-text-color-black-secondary">等人觉得很赞</span>
+      </div>
 
+  }
+
+  val optionStatusRx = isLiked.map{
+    t=>
+    {if(t){
+      <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent" onclick={() => cancelWebLike}>取消点赞</button>
+    }else{
+      <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent" onclick={() => addWeiboLike}>点赞</button>
+    }}
+  }
+
+  val deleteStatusRx = loginName.map {
+    l =>
+        {userName.map {
+        u =>
+            {if (l == u) {
+            <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent" onclick={() => deleteRecord()}>删除</button>
+          }else{
+              <div></div>
+            }}
+      }}
+  }
   val taskListRx = currentTask.map {
     case Nil => <div style ="margin: 30px; font-size: 17px;">加载中……</div>
     case list =>
@@ -104,16 +182,11 @@ case class Comment(recordId:Int) {
                 {l.content}
               </div>
               <div class="actions">
-                <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent">删除</button>
-                <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent">点赞</button>
+                {deleteStatusRx}
+                {optionStatusRx}
                 <button mdui-dialog="{target: '#page-answer-editor'}" class="mdui-btn mdui-btn-raised mdui-color-theme-accent">评论</button>
               </div>
-              <div class="mdui-p-y-3">
-                <a class="avatar">
-                <img src="https://cdn.v2ex.com/gravatar/190cbaf38804895199ec44e1e178f69d?s=65&amp;r=G&amp;d="/>
-                </a>
-                <span class="mdui-text-color-black-secondary">等人觉得很赞</span>
-              </div>
+
             </div>
 
             <div class="mdui-dialog mc-editor-dialog" id="page-answer-editor">

@@ -15,15 +15,27 @@ object Routes {
 
   object List {
     val baseUrl = base + "/list"
-    val getMyList = baseUrl + "/getList"
+    val getRecordListByLoginUser = baseUrl + "/getRecordListByLoginUser"
     val getFocusRecordList = baseUrl + "/getFocusRecordList"
     val getRecentHotList = baseUrl + "/getRecentHotList"
     val goComment = baseUrl + "/goComment"
     val getCommentListByRecordId = baseUrl+"/getCommentListByRecordId"
     val getRecordById = baseUrl+"/getRecordById"
+    val getRecordListByUser = baseUrl+"/getRecordListByUser"
     val addRecord = baseUrl + "/addRecord"
     val delRecord = baseUrl + "/delRecord"
     val addComment = baseUrl + "/addComment"
   }
 
+  object User{
+    val baseUrl = base + "/user"
+    val getConcernList = baseUrl +"/getConcernList"
+    val getFansList = baseUrl +"/getFansList"
+    val getLikedUserListByRecordId = base + "/getLikedUserListByRecordId"
+    val addLike = base + "/addLike"
+    val cancelLike = base + "/cancelLike"
+    val getCurrentUser = base + "/getCurrentUser"
+    val addOrCancelFocus = base + "/addOrCancelFocus"
+
+  }
 }

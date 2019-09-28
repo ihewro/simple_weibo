@@ -67,7 +67,28 @@ object ToDoListProtocol {
 
 
 
+  case class GetLikedUserListRsp(
+                             list: Option[List[UserInfo]],
+                             loginName: String,//加上一个当前登录用户的用户名，方便前端进行判断
+                                isLike: Boolean,//当前登录用户是否已经点赞了
+                             errCode: Int = 0,
+                             msg: String = "Ok"
+                           )extends CommonRsp
 
+  case class GetUserListRsp(
+                             list: Option[List[UserInfo]],
+                             loginName: String,//加上一个当前登录用户的用户名，方便前端进行判断
+                             errCode: Int = 0,
+                             msg: String = "Ok"
+                           )extends CommonRsp
+
+  case class GetOtherUserRsp(
+                            userInfo: UserInfo,
+                            loginName: String,//加上一个当前登录用户的用户名，方便前端进行判断
+                            isFocus: Boolean, //当前登录用户是否已经关注了该用户
+                            errCode: Int = 0,
+                            msg: String = "Ok"
+                            )extends CommonRsp
   //返回评论列表的消息结构体
   case class GetCommentListRsq(
                                 list: Option[List[CommentInfo]],

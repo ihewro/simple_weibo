@@ -97,7 +97,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
   }
 
 
-  private val getList = (path("getList") & get) {
+  private val getRecordListByLoginUser = (path("getRecordListByLoginUser") & get) {
     userAuth{ user =>
       dealFutureResult2 {
         ToDoListDAO.getRecordListByUser(user.userid).map { list =>
@@ -253,7 +253,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
     userAuth{
       user =>
         dealFutureResult2(
-          ToDoListDAO.getRecentHotList().map{list=>
+          ToDoListDAO.getRecentHotList.map{list=>
             val data = list.map { r=>
               //查询该username对象的user信息
               val users = for {
@@ -280,7 +280,6 @@ trait ToDoListService extends ServiceUtils with SessionBase {
 
   val listRoutes: Route =
     pathPrefix("list") {
-      addRecord ~ delRecord ~ getList ~ goComment ~ getRecordById ~ getCommentListByRecordId ~ addComment ~ getFocusRecordList ~ getRecentHotList
+      addRecord ~ delRecord ~ getRecordListByLoginUser ~ goComment ~ getRecordById ~ getCommentListByRecordId ~ addComment ~ getFocusRecordList ~ getRecentHotList
     }
-
 }
