@@ -1,19 +1,13 @@
 package com.neo.sk.todos2018.front
 
-import cats.Show
 import com.neo.sk.todos2018.front.pages.TaskList.taskList
-import com.neo.sk.todos2018.front.pages.{Comment, EditProfile, Login, MyFocus, RecentHot, TaskList, User}
-import mhtml.mount
-import org.scalajs.dom
-import com.neo.sk.todos2018.front.utils.{Http, JsFunc, PageSwitcher}
-import mhtml._
-import org.scalajs.dom
-import io.circe.syntax._
-import io.circe.generic.auto._
+import com.neo.sk.todos2018.front.pages._
 import com.neo.sk.todos2018.front.styles.ListStyles
+import com.neo.sk.todos2018.front.utils.{Http, JsFunc, PageSwitcher}
 import com.neo.sk.todos2018.shared.ptcl.SuccessRsp
-import org.querki.jquery.JQueryEventObject
-import org.querki.jquery._
+import io.circe.generic.auto._
+import mhtml.{mount, _}
+import org.querki.jquery.{JQueryEventObject, _}
 import org.scalajs.dom
 
 import scala.concurrent.ExecutionContext.Implicits.global

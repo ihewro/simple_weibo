@@ -5,6 +5,8 @@ import com.neo.sk.todos2018.models.SlickTables._
 import com.neo.sk.todos2018.utils.DBUtil.db
 import org.slf4j.LoggerFactory
 import slick.jdbc.PostgresProfile.api._
+import com.neo.sk.todos2018.Boot.executor
+
 
 import scala.concurrent.Future
 
@@ -38,16 +40,16 @@ import scala.concurrent.Future
 object ToDoListDAO{
   private val log = LoggerFactory.getLogger(this.getClass)
 
-  def addRecord(author: String, content: String): Future[Int] = {
+  def addRecord(author: Int, content: String): Future[Int] = {
     try {
-      if (author.length == 0 ) {
+      if (author == 0 ) {
         log.error(s"empty author")
         Future.successful(-1)
       } else if (content.length == 0) {
         log.error(s"empty content")
         Future.successful(-1)
       } else {
-        val test = tRecordInfo.map(t => (t.author, t.content, t.time))
+        val test = tRecordInfo.map(t => (t.userid, t.content, t.time))
         db.run(test += (author, content, System.currentTimeMillis()))
       }
     } catch {
@@ -82,11 +84,19 @@ object ToDoListDAO{
     }
   }
 
+  def getFocusRecordByUser(id:Int):Future[Seq[rRecordInfo]] = {
+
+    for{
+     j <-  db.run{tUserRelationship.filter(t=> t.dageId === id).result}
+     i <- db.run{tRecordInfo.filter(t=> j.contains(t.userid.asColumnOf[Int])).result}
+    }yield i
+  }
 
 
-  def getRecordListByUser(author: String): Future[Seq[rRecordInfo]] = {
+
+  def getRecordListByUser(author: Int): Future[Seq[rRecordInfo]] = {
     try {
-      db.run(tRecordInfo.filter(t => t.author === author).result)
+      db.run(tRecordInfo.filter(t => t.userid === author).result)
     } catch {
       case e: Throwable =>
         log.error(s"get recordList error with error $e")

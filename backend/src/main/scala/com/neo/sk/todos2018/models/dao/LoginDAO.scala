@@ -48,10 +48,10 @@ object LoginDAO {
 
   }
 
-  def getUser(name:String): Future[Option[rUserInfo]] = {
+  def getUser(id:Int): Future[Option[rUserInfo]] = {
     try {
       db.run {
-        tUserInfo.filter(t => t.name === name).result
+        tUserInfo.filter(t => t.id === id).result
         tUserInfo.result.headOption
       }
     } catch {

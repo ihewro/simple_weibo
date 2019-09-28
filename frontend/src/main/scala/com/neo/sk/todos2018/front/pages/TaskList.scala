@@ -14,6 +14,7 @@ import org.scalajs.dom
 import org.scalajs.dom.html.{Input, TextArea}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.xml.Elem
 /**
   * Created by haoshuhan on 2018/6/4.
   * changed by Xu Si-ran on 2019/3/21
@@ -41,7 +42,6 @@ object TaskList{
             JsFunc.alert("添加失败！")
             println(rsp.msg)
           }
-
         case Left(error) =>
           println(s"parse error,$error")
       }
@@ -71,7 +71,7 @@ object TaskList{
 
 
 
-  def getMyList(): Unit = {
+  def getMyList: Unit = {
     println("getMyList")
     Http.getAndParse[GetListRsp](Routes.List.getMyList).map {
       case Right(rsp) =>
@@ -102,46 +102,45 @@ object TaskList{
     }
   }
 
-  val taskMyListRx = taskList.map {
-    case Nil =>
-      <div class="mc-empty"><div class="title">暂无微博</div>
-        <div class="description">可以点击近期热门，发现更有趣的瞬间。</div>
-      </div>
-    case list =>
-
-      <div style="font-size: 17px;">
-        {list.map {l =>
-        <a class="item" href={"/todos2018#/Detail/"+l.id}>
-          <div class="avatar" style={"background-image: url("+l.userInfo.avatar.url+");"}></div>
-          <div class="content">
-            <div class="title">
-              {l.content}
-            </div>
-            <div class="meta">
-              <div class="username">
-                {l.userInfo.userName}
+  /**
+   * 根据微博记录返回一个HTML node 内容
+   * @param list
+   * @return
+   */
+  def returnRecordRX (list : Var[List[TaskRecord]]): Rx[Elem] = {
+    list.map {
+      case Nil =>
+        <div class="mc-empty"><div class="title">暂无微博</div>
+          <div class="description">可以点击近期热门，发现更有趣的瞬间。</div>
+        </div>
+      case list =>
+        <div style="font-size: 17px;">
+          {list.map {l =>
+          <a class="item" href={"/todos2018#/Detail/"+l.id}>
+            <div class="avatar" style={"background-image: url("+l.userInfo.avatar.url+");"}></div>
+            <div class="content">
+              <div class="title">
+                {l.content}
               </div>
-              <div class="answer_time" title="2019-09-26 17:11:16">
-                发布于 {TimeTool.dateFormatDefault(l.time)}
+              <div class="meta">
+                <div class="username">
+                  {l.userInfo.userName}
+                </div>
+                <div class="answer_time" title="2019-09-26 17:11:16">
+                  发布于 {TimeTool.dateFormatDefault(l.time)}
+                </div>
               </div>
             </div>
-          </div>
-        </a>
-      }
+          </a>
         }
+          }
+        </div>
+    }
 
-      </div>
   }
+  val taskMyListRx: Rx[Elem] = returnRecordRX(taskList)
 
 
-
-  def myList: Unit ={
-    getMyList
-  }
-
-  def allList: Unit ={
-    getMyList
-  }
 
   def app: xml.Node = {
    getMyList
@@ -155,7 +154,6 @@ object TaskList{
       {taskMyListRx}
     </div>
   </div>
-
   }
 
 }

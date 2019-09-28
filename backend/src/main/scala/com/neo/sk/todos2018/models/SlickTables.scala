@@ -80,25 +80,25 @@ trait SlickTables {
 
   /** Entity class storing rows of table tRecordInfo
    *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
-   *  @param author Database column AUTHOR SqlType(VARCHAR), Length(63,true)
+   *  @param userid Database column userId SqlType(INTEGER)
    *  @param content Database column CONTENT SqlType(VARCHAR), Length(1023,true)
    *  @param time Database column TIME SqlType(BIGINT) */
-  case class rRecordInfo(id: Int, author: String, content: String, time: Long)
+  case class rRecordInfo(id: Int, userid: Int, content: String, time: Long)
   /** GetResult implicit for fetching rRecordInfo objects using plain SQL queries */
   implicit def GetResultrRecordInfo(implicit e0: GR[Int], e1: GR[String], e2: GR[Long]): GR[rRecordInfo] = GR{
     prs => import prs._
-      rRecordInfo.tupled((<<[Int], <<[String], <<[String], <<[Long]))
+      rRecordInfo.tupled((<<[Int], <<[Int], <<[String], <<[Long]))
   }
   /** Table description of table RECORD_INFO. Objects of this class serve as prototypes for rows in queries. */
   class tRecordInfo(_tableTag: Tag) extends profile.api.Table[rRecordInfo](_tableTag, "RECORD_INFO") {
-    def * = (id, author, content, time) <> (rRecordInfo.tupled, rRecordInfo.unapply)
+    def * = (id, userid, content, time) <> (rRecordInfo.tupled, rRecordInfo.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = ((Rep.Some(id), Rep.Some(author), Rep.Some(content), Rep.Some(time))).shaped.<>({r=>import r._; _1.map(_=> rRecordInfo.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = ((Rep.Some(id), Rep.Some(userid), Rep.Some(content), Rep.Some(time))).shaped.<>({r=>import r._; _1.map(_=> rRecordInfo.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column ID SqlType(INTEGER), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("ID", O.AutoInc, O.PrimaryKey)
-    /** Database column AUTHOR SqlType(VARCHAR), Length(63,true) */
-    val author: Rep[String] = column[String]("AUTHOR", O.Length(63,varying=true))
+    /** Database column userId SqlType(INTEGER) */
+    val userid: Rep[Int] = column[Int]("userId")
     /** Database column CONTENT SqlType(VARCHAR), Length(1023,true) */
     val content: Rep[String] = column[String]("CONTENT", O.Length(1023,varying=true))
     /** Database column TIME SqlType(BIGINT) */

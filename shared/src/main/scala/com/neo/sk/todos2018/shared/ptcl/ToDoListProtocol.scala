@@ -66,6 +66,8 @@ object ToDoListProtocol {
   ) extends CommonRsp
 
 
+
+
   //返回评论列表的消息结构体
   case class GetCommentListRsq(
                                 list: Option[List[CommentInfo]],
