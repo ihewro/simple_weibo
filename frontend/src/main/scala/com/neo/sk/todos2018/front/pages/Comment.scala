@@ -23,14 +23,16 @@ case class Comment(recordId:Int) {
   val currentTask = Var(List.empty[TaskRecord])
   val likedUserList = Var(List.empty[UserInfo])
   val isLiked = Var(false)
+  var haveDeleteButton = false
 
   def getCurrentRecord: Unit ={
     println("评论id"+recordId)
     val data = GoToCommentReq(recordId).asJson.noSpaces
     Http.postJsonAndParse[GetListRsp](Routes.List.getRecordById,data).map{
-      case Right(rep) =>
-        currentTask := rep.list.get
-        userName := rep.list.get.head.userInfo.userName
+      case Right(rsp) =>
+        currentTask := rsp.list.get
+        userName := rsp.list.get.head.userInfo.userName
+        loginName := rsp.loginName
       case Left(error) =>
         println(s"get  error,$error")
     }
@@ -97,8 +99,8 @@ case class Comment(recordId:Int) {
     Http.postJsonAndParse[SuccessRsp](Routes.List.delRecord, data).map {
       case Right(rsp) =>
         println(rsp)
-        JsFunc.alert("删除成功")
-        //TODO:跳转到微博列表页面
+        JsFunc.showMessage("删除成功")
+        dom.window.location.hash = "/List"
       case Left(error) =>
         println(s"parse error,$error")
     }
@@ -154,11 +156,12 @@ case class Comment(recordId:Int) {
     l =>
         {userName.map {
         u =>
-            {if (l == u) {
+          println(l + "|" + u + "|" + haveDeleteButton)
+          if (l == u) {
             <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent" onclick={() => deleteRecord()}>删除</button>
           }else{
               <div></div>
-            }}
+            }
       }}
   }
   val taskListRx = currentTask.map {
@@ -186,7 +189,7 @@ case class Comment(recordId:Int) {
                 {optionStatusRx}
                 <button mdui-dialog="{target: '#page-answer-editor'}" class="mdui-btn mdui-btn-raised mdui-color-theme-accent">评论</button>
               </div>
-
+              {likedUserListRx}
             </div>
 
             <div class="mdui-dialog mc-editor-dialog" id="page-answer-editor">
@@ -237,6 +240,7 @@ case class Comment(recordId:Int) {
   }
 
   def app: xml.Node = {
+    getLikedUserListByRecordId
     getCurrentRecord
     getChildCommentList
     <div id="page-question" class="mdui-container">

@@ -47,7 +47,7 @@ object Main extends PageSwitcher {
     Http.getAndParse[SuccessRsp](Routes.Login.userLogout).map{
       case Right(rsp) =>
         if(rsp.errCode == 0){
-          JsFunc.alert("退出成功，感谢您在本站点花费的时间")
+          JsFunc.showMessage("退出成功，感谢您在本站花费的时间")
           taskList := Nil
           dom.window.location.hash = "/Login"
         }

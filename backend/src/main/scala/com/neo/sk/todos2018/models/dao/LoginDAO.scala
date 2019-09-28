@@ -37,8 +37,7 @@ object LoginDAO {
   def isUser(name: String,password:String): Future[Option[rUserInfo]] = {
     try {
       db.run{
-        tUserInfo.filter(t => t.name === name).filter(t => t.password === password).result
-        tUserInfo.result.headOption
+        tUserInfo.filter(t => t.name === name).filter(t => t.password === password).result.headOption
       }
     } catch {
       case e: Throwable =>
@@ -51,8 +50,7 @@ object LoginDAO {
   def getUser(id:Int): Future[Option[rUserInfo]] = {
     try {
       db.run {
-        tUserInfo.filter(t => t.id === id).result
-        tUserInfo.result.headOption
+        tUserInfo.filter(t => t.id === id).result.headOption
       }
     } catch {
       case e: Throwable =>
@@ -65,8 +63,7 @@ object LoginDAO {
   def getUserById(id:Int): Future[Option[rUserInfo]] = {
     try {
       db.run {
-        tUserInfo.filter(t => t.id === id).result
-        tUserInfo.result.headOption
+        tUserInfo.filter(t => t.id === id).result.headOption
       }
     } catch {
       case e: Throwable =>
@@ -78,8 +75,7 @@ object LoginDAO {
   def getUserAvatar(avatarid: Int): Future[Option[rAvatar]] = {
     try{
       db.run{
-        tAvatar.filter(t => t.id === avatarid).result
-        tAvatar.result.headOption
+        tAvatar.filter(t => t.id === avatarid).result.headOption
       }
     }catch {
       case e: Throwable =>

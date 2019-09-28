@@ -131,16 +131,14 @@ object UserDao {
   //是否关注了对方
   def isFocus(userId:Int,xiaodiId:Int) :Future[Option[rUserRelationship]] ={
     db.run{
-      tUserRelationship.filter(t=> t.dageId === userId).filter(t=> t.xiaodiId === xiaodiId).result
-      tUserRelationship.result.headOption
+      tUserRelationship.filter(t=> t.dageId === userId).filter(t=> t.xiaodiId === xiaodiId).result.headOption
     }
   }
 
 
   def isLike(userId:Int,recordId:Int):Future[Option[rRecordLikeRelationship]]= {
     db.run{
-      tRecordLikeRelationship.filter(t=> t.recordId === recordId).filter(t=> t.userId === userId).result
-      tRecordLikeRelationship.result.headOption
+      tRecordLikeRelationship.filter(t=> t.recordId === recordId).filter(t=> t.userId === userId).result.headOption
     }
   }
 

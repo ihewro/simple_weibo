@@ -34,22 +34,18 @@ object Login{
       case Right(rsp) =>
         println(rsp)
         if(rsp.errCode == 0){
-          if (typeStr == "login"){
-            JsFunc.alert("登陆成功")
-          }else{
-            JsFunc.alert("注册成功")
-          }
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = "/List"
         }
         else{
           if (typeStr == "login"){
-            JsFunc.alert(s"登陆失败：${rsp.msg}")
+            JsFunc.showMessage(s"${rsp.msg}")
           }else{
-            JsFunc.alert(s"注册失败：${rsp.msg}")
+            JsFunc.showMessage(s"${rsp.msg}")
           }
         }
       case Left(error) =>
-        JsFunc.alert(s"parse error,$error")
+        JsFunc.showMessage(s"parse error,$error")
     }
   }
 

@@ -66,6 +66,7 @@ object ToDoListProtocol {
                        )extends CommonRsp
   case class GetListRsp(
     list: Option[List[TaskRecord]],
+    loginName: String,//加上一个当前登录用户的用户名，方便前端进行判断
     errCode: Int = 0,
     msg: String = "Ok"
   ) extends CommonRsp

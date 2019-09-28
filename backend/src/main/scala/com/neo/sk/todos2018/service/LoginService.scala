@@ -43,10 +43,12 @@ trait LoginService extends ServiceUtils with SessionBase {
       case Right(req) =>
         dealFutureResult {
           LoginDAO.isUser(req.userName, req.password).map { r =>
+            println(r)
             if (r.nonEmpty) {
+              println(r.get.id+"|"+req.userName)
               val session = ToDoListSession(UserBaseInfo(r.get.id,req.userName), System.currentTimeMillis())
               addSession(session.toSessionMap){
-                complete(SuccessRsp())
+                complete(SuccessRsp(0,"登录成功"))
               }
             } else {
               complete(ErrorRsp(1000101, "登录失败"))

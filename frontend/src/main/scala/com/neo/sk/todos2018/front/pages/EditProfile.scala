@@ -29,7 +29,8 @@ object EditProfile {
     Http.postJsonAndParse[SuccessRsp](Routes.User.editProfile,PostUserReq(password,currentChoose).asJson.noSpaces).map{
       case Right(rsp) =>
         if (rsp.errCode == 0){
-          JsFunc.alert("修改成功")
+          JsFunc.showMessage("修改成功")
+          dom.window.location.hash = s"#/List"
         }else{
           JsFunc.alert(rsp.msg)
           dom.window.location.hash = s"#/Login"

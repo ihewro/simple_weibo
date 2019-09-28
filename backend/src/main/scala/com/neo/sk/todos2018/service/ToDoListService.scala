@@ -124,7 +124,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
               val rst = scala.concurrent.Future.sequence(data)
               rst.map{
                 data =>
-                  complete(GetListRsp(Some(data.toList)))
+                  complete(GetListRsp(Some(data.toList),user.userName))
               }
             }
           }
@@ -156,7 +156,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
           val rst = scala.concurrent.Future.sequence(data)
           rst.map{
             data =>
-              complete(GetListRsp(Some(data.toList)))
+              complete(GetListRsp(Some(data.toList),user.userName))
           }
         }
       }
@@ -191,7 +191,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
               val rst = scala.concurrent.Future.sequence(data)
               rst.map{
                 data =>
-                  complete(GetListRsp(Some(data.toList)))
+                  complete(GetListRsp(Some(data.toList),user.userName))
               }
             }
           )
@@ -279,7 +279,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
             val rst = scala.concurrent.Future.sequence(data)
             rst.map{
               data =>
-                complete(GetListRsp(Some(data.toList)))
+                complete(GetListRsp(Some(data.toList),user.userName))
             }
           }
         )
@@ -309,7 +309,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
             val rst = scala.concurrent.Future.sequence(data)
             rst.map{
               data =>
-                complete(GetListRsp(Some(data.toList)))
+                complete(GetListRsp(Some(data.toList),user.userName))
             }
           }
         )
