@@ -15,6 +15,27 @@ object UserDao {
   private val log = LoggerFactory.getLogger(this.getClass)
 
 
+
+  def getConcernList(userId:Int):Future[Seq[(rUserInfo,rAvatar)]] = {
+    val q = for{
+      t <- tUserRelationship if t.xiaodiId ===userId
+      user <- tUserInfo if  t.dageId === user.id
+      avatar <- tAvatar if avatar.id === user.avatarId
+    }yield (user,avatar)
+    db.run(q.result)
+  }
+
+
+
+  def getFansList(userId:Int):Future[Seq[(rUserInfo,rAvatar)]] = {
+    val q = for{
+      t <- tUserRelationship if t.dageId ===userId
+      user <- tUserInfo if  t.xiaodiId === user.id
+      avatar <- tAvatar if avatar.id === user.avatarId
+    }yield (user,avatar)
+    db.run(q.result)
+  }
+
   def editProfile(userId:Int, avatarId:Int,password:String): Future[Int] ={
     try {
       if (password !=""){
@@ -48,6 +69,27 @@ object UserDao {
 
   def getAvatarId(userId : Int):Future[Int] = {
     db.run(tUserInfo.filter(t=> t.id === userId).map(_.avatarId).result.head)
+  }
+
+
+  def addOrCancelLike(userId: Int,recordId:Int):Future[Int] = {
+    try{
+      //先查询是否存在关联，如果已经关注了，则取消关注，否则关注
+      for{
+        r <- db.run{tRecordLikeRelationship.filter(t=> t.recordId === recordId).filter(t=> t.userId === userId).result.headOption}
+      }yield  if (r.isEmpty){//如果没有关联则增加关联
+        db.run{tRecordLikeRelationship.map(t=> (t.recordId,t.userId)) += (recordId,userId)}
+      }else{//取消关联
+        db.run{tRecordLikeRelationship.filter(t=> t.recordId === recordId).filter(t=> t.userId === userId).delete}
+      }
+
+      Future.successful(1)
+
+    }catch {
+      case e:Throwable =>
+        log.error(s"get recordList error with error $e")
+        Future.successful(-1)
+    }
   }
 
   def addOrCancelFocus(dageId: Int,xiaodiId:Int) : Future[Int] = {
@@ -92,8 +134,24 @@ object UserDao {
       tUserRelationship.filter(t=> t.dageId === userId).filter(t=> t.xiaodiId === xiaodiId).result
       tUserRelationship.result.headOption
     }
-
   }
 
+
+  def isLike(userId:Int,recordId:Int):Future[Option[rRecordLikeRelationship]]= {
+    db.run{
+      tRecordLikeRelationship.filter(t=> t.recordId === recordId).filter(t=> t.userId === userId).result
+      tRecordLikeRelationship.result.headOption
+    }
+  }
+
+
+  def getLikedUserListByRecordId(recordId:Int): Future[Seq[(rUserInfo,rAvatar)]] ={
+    val query = for{
+      f <- tRecordLikeRelationship if f.recordId === recordId
+      user <- tUserInfo if user.id === f.userId
+      avatar <- tAvatar if avatar.id === user.avatarId
+    }yield (user,avatar)
+    db.run(query.result)
+  }
 
 }

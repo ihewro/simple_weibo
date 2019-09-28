@@ -77,13 +77,51 @@ case class User(userId: Int) {
             </div>
           </div>
   }
+
+
+
+  val fanUserListRx = fanUserList.map{
+    case Nil => <div class="mdui-dialog mc-users-dialog" id="concernUsers">
+      <div class="mdui-dialog-title">
+        <button class="mdui-btn mdui-btn-icon mdui-ripple close" mdui-dialog-close="true">
+          <i class="mdui-icon material-icons">close</i></button> 0 个粉丝
+      </div>
+      <div class="mdui-dialog-content">
+        <ul class="mdui-list"></ul>
+        <div class="mc-empty"><div class="title">没有任何粉丝</div>
+          <div class="description">如果有人喜欢Ta，相应用户就会显示在此处。</div></div>
+      </div>
+    </div>
+    case list =>
+      <div class="mdui-dialog mc-users-dialog" id="concernUsers">
+        <div class="mdui-dialog-title">
+          <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-dialog-close="true"><i class="mdui-icon material-icons">close</i></button> {list.length} 个粉丝
+        </div>
+        <div class="mdui-dialog-content">
+          <ul class="mdui-list">
+            {list.map{
+            l=>
+              <li class="mdui-list-item mdui-ripple">
+                <div class="mdui-list-item-avatar">
+                  <img src={l.avatar.url} />
+                </div>
+                <div class="mdui-list-item-content">
+                  {l.userName}
+                </div>
+              </li>
+          }}
+          </ul>
+        </div>
+      </div>
+  }
+
   def getConcernList(): Unit ={
     val data = GoToCommentReq(userId).asJson.noSpaces
     Http.postJsonAndParse[GetUserListRsp](Routes.User.getConcernList,data).map{
       case Right(rsp) =>
       if (rsp.errCode == 0){
         concernUserList := rsp.list.get
-        fans_num := rsp.list.get.length
+        focus_num := rsp.list.get.length
       }else{
         JsFunc.alert(rsp.msg)
         dom.window.location.hash = s"#/Login"
@@ -95,7 +133,19 @@ case class User(userId: Int) {
 
 
   def fansList: Unit ={
-
+    val data = GoToCommentReq(userId).asJson.noSpaces
+    Http.postJsonAndParse[GetUserListRsp](Routes.User.getFansList,data).map{
+      case Right(rsp) =>
+        if (rsp.errCode == 0){
+          fanUserList := rsp.list.get
+          fans_num := rsp.list.get.length
+        }else{
+          JsFunc.alert(rsp.msg)
+          dom.window.location.hash = s"#/Login"
+          println(rsp.msg)
+        }
+      case Left(error) =>
+    }
   }
 
 

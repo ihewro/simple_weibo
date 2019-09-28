@@ -116,9 +116,103 @@ trait UserService extends ServiceUtils with SessionBase {
     }
   }
 
+  private val getLikedUserListByRecordId = (path("getLikedUserListByRecordId") & post){
+    userAuth{
+      user => entity(as[Either[Error,GoToCommentReq]]){
+        case Left(error: Error) =>
+          complete(parseError)
+        case Right(req) =>
+          dealFutureResult2(
+            UserDao.getLikedUserListByRecordId(req.id).map{
+              list =>
+                val data = list.map{
+                  l =>
+                    UserInfo(l._1.id,l._1.name,AvatarInfo(l._2.id,l._2.url))
+                }.toList
+
+                UserDao.isLike(user.userid,req.id).map{
+                  l =>
+                    var flag = false
+                    if (l.isEmpty){
+                      flag = false
+                    }else{
+                      flag = true
+                    }
+                    complete(GetLikedUserListRsp(Some(data),user.userName,flag))
+                }
+            }
+          )
+      }
+    }
+  }
+
+
+  private val addOrCancelLike = (path("addOrCancelLike") & post){
+    userAuth{
+      user => entity(as[Either[Error,GoToCommentReq]]){
+        case Left(error: Error) =>
+          complete(parseError)
+        case Right(req: GoToCommentReq) =>
+          dealFutureResult(
+            UserDao.addOrCancelLike(user.userid,req.id).map{
+              t=>
+                if(t>0){
+                  complete(SuccessRsp())
+                }else{
+                  complete(ErrorRsp(1000101, "关注操作失败"))
+                }
+            }
+          )
+      }
+    }
+  }
+
+
+  private val getConcernList = (path("getConcernList") & post){
+    userAuth{
+      user => entity(as[Either[Error,GoToCommentReq]]){
+        case Left(error: Error) =>
+          complete(parseError)
+        case Right(req: GoToCommentReq) =>
+          dealFutureResult(
+            UserDao.getConcernList(req.id).map{
+              list =>
+               val data = list.map{
+                 l=>
+                   UserInfo(l._1.id,l._1.name,AvatarInfo(l._2.id,l._2.url))
+               }.toList
+                complete(GetUserListRsp(Some(data),user.userName))
+            }
+          )
+      }
+    }
+  }
+
+
+  private val getFansList = (path("getFansList") & post){
+    userAuth{
+      user => entity(as[Either[Error,GoToCommentReq]]){
+        case Left(error: Error) =>
+          complete(parseError)
+        case Right(req: GoToCommentReq) =>
+          dealFutureResult(
+            UserDao.getFansList(req.id).map{
+              list =>
+                val data = list.map{
+                  l=>
+                    UserInfo(l._1.id,l._1.name,AvatarInfo(l._2.id,l._2.url))
+                }.toList
+                complete(GetUserListRsp(Some(data),user.userName))
+            }
+          )
+      }
+    }
+  }
+
+
 
   val userRoutes: Route =
     pathPrefix("user") {
-      addOrCancelFocus ~ getCurrentUser ~ getAvatarList ~ editProfile
+      addOrCancelFocus ~ getCurrentUser ~ getAvatarList ~ editProfile ~ getLikedUserListByRecordId ~ addOrCancelLike ~ getConcernList ~ getFansList
     }
 }

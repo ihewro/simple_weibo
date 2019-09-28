@@ -69,7 +69,7 @@ case class Comment(recordId:Int) {
   def addWeiboLike: Unit ={
     //给微博添加点赞
     val data = GoToCommentReq(recordId).asJson.noSpaces
-    Http.postJsonAndParse[SuccessRsp](Routes.User.addLike,data).map{
+    Http.postJsonAndParse[SuccessRsp](Routes.User.addOrCancelLike,data).map{
       case Right(rsp) =>
         if (rsp.errCode == 0){
           //点赞成功
@@ -81,7 +81,7 @@ case class Comment(recordId:Int) {
 
   def cancelWebLike: Unit = {
     val data = GoToCommentReq(recordId).asJson.noSpaces
-    Http.postJsonAndParse[SuccessRsp](Routes.User.cancelLike,data).map{
+    Http.postJsonAndParse[SuccessRsp](Routes.User.addOrCancelLike,data).map{
       case Right(rsp) =>
         if (rsp.errCode == 0){
           //点赞成功
