@@ -115,7 +115,7 @@ case class Comment(recordId:Int) {
     Http.postJsonAndParse[SuccessRsp](Routes.List.addComment,data).map{
       case Right(rsp) =>
         if (rsp.errCode == 0){
-          JsFunc.alert("添加成功")
+          JsFunc.showMessage("添加成功")
           getChildCommentList
         }else{
           JsFunc.alert(rsp.msg)

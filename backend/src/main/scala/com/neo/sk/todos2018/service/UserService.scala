@@ -88,7 +88,7 @@ trait UserService extends ServiceUtils with SessionBase {
               }.toList
               UserDao.getAvatarId(user.userid).map(
                 id =>
-                  complete(GetAvatarListRsp(Some(data),id))
+                  complete(GetAvatarListRsp(Some(data),user.userName,id))
               )
           }
         )

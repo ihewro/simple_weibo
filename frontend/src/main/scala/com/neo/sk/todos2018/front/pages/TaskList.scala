@@ -36,10 +36,10 @@ object TaskList{
       Http.postJsonAndParse[SuccessRsp](Routes.List.addRecord, AddRecordReq(data).asJson.noSpaces).map {
         case Right(rsp) =>
           if(rsp.errCode == 0) {
-            JsFunc.alert("添加成功！")
+            JsFunc.showMessage("添加成功！")
             getMyList
           } else {
-            JsFunc.alert("添加失败！")
+            JsFunc.showMessage("添加失败！")
             println(rsp.msg)
           }
         case Left(error) =>

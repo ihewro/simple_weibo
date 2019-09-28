@@ -72,7 +72,7 @@ object Login{
             </div>
           </div>
           <div class="actions mdui-clearfix">
-            <p class="mdui-text-color-black-icon-disabled">未注册的用户将自动注册账号并登录</p>
+            <button type="button" onclick = {()=> userLoginAndRegister("register")} class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-left">注册</button>
             <button type="button" onclick = {()=> userLoginAndRegister("login")} class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">登录</button>
           </div>
         </form>

@@ -1,19 +1,17 @@
 package com.neo.sk.todos2018.front.pages
 
 import com.neo.sk.todos2018.front.Routes
-import com.neo.sk.todos2018.front.pages.RecentHot.recentTaskList
 import com.neo.sk.todos2018.front.utils.{Http, JsFunc}
 import com.neo.sk.todos2018.shared.ptcl.SuccessRsp
-import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.{AvatarInfo, GetAvatarListRsp, GetListRsp, PostUserReq, UserInfo}
-
-import scala.xml.Node
+import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.{AvatarInfo, GetAvatarListRsp, PostUserReq}
 import io.circe.generic.auto._
 import io.circe.syntax._
-import mhtml.Var
+import mhtml.{Rx, Var}
 import org.scalajs.dom
 import org.scalajs.dom.html.Input
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.xml.Node
 
 /**
  * 修改当前登录用户的个人信息
@@ -23,6 +21,7 @@ object EditProfile {
   val avatarList = Var(List.empty[AvatarInfo])
   val currentUse = Var(1)
   var currentChoose = 1
+  val loginName = Var("")
 
   def saveProfile: Unit ={
     val password = dom.document.getElementById("userPassword").asInstanceOf[Input].value
@@ -47,6 +46,7 @@ object EditProfile {
         if (rsp.errCode == 0){
           avatarList := rsp.list.get
           currentUse := rsp.currentUseAvatarId
+          loginName := rsp.loginName
         }else{
           JsFunc.alert(rsp.msg)
           dom.window.location.hash = s"#/Login"
@@ -69,7 +69,7 @@ object EditProfile {
       <form class="mdui-p-l-5">
         { list.map{
         l =>
-          if (l.id.toString == currentUse.toString()){
+          if ("Var("+l.id.toString+")" == currentUse.toString()){
             <label class="mdui-radio" onclick={()=>changeCurrentUse(l.id)}>
               <input type="radio" name="group1" checked="true" />
               <i class="mdui-radio-icon"></i>
@@ -94,6 +94,15 @@ object EditProfile {
     <div id="page-question" class="mdui-container">
 
       <div class="mdui-card mdui-center question mdui-p-t-3 mdui-p-b-3">
+
+        <div class="mdui-textfield">
+          <i class="mdui-icon material-icons">lock</i>
+          <label class="mdui-textfield-label">用户名</label>
+          {loginName.map(t=> <input class="mdui-textfield-input" type="text" disabled="true" placeholder={t} />)}
+        </div>
+
+
+
         <div class="mdui-textfield">
           <i class="mdui-icon material-icons">lock</i>
           <label class="mdui-textfield-label">密码</label>

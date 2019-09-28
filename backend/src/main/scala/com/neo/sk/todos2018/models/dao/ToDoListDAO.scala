@@ -42,7 +42,7 @@ object ToDoListDAO{
 
   def addRecord(author: Int, content: String): Future[Int] = {
     try {
-      if (author == 0 ) {
+      if (author == 0) {
         log.error(s"empty author")
         Future.successful(-1)
       } else if (content.length == 0) {

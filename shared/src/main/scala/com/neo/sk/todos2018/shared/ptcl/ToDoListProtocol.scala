@@ -74,6 +74,7 @@ object ToDoListProtocol {
 
   case class GetAvatarListRsp(
                              list: Option[List[AvatarInfo]],
+                             loginName: String,
                              currentUseAvatarId: Int, //当前登录用户使用的头像id
                              errCode: Int = 0,
                              msg: String = "Ok"

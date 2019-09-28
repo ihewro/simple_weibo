@@ -138,6 +138,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
   private val getRecordListByLoginUser = (path("getRecordListByLoginUser") & get) {
     userAuth{ user =>
       dealFutureResult2 {
+        println("登录用户" + user)
         ToDoListDAO.getRecordListByUser(user.userid).map { list =>
           val data = list.map { r=>
             //查询该username对象的user信息
