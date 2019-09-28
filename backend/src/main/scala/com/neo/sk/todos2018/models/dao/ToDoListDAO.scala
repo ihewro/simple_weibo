@@ -104,6 +104,15 @@ object ToDoListDAO{
     }
   }
 
+  def getRecentHotList():Future[Seq[rRecordInfo]]= {
+    try {
+      db.run(tRecordInfo.sortBy(t=> t.time).result)//按照时间排序
+    }catch {
+      case  e: Throwable =>
+        log.error(s"get recordList error with error $e")
+        Future.successful(Nil)
+    }
+  }
   def getCommentListByRecordId(recordid: Int):Future[Seq[rComment]] = {
     try{
       db.run(tComment.filter(t => t.recordid === recordid).result)
