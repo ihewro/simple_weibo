@@ -29,7 +29,7 @@ case class User(userId: Int) {
   val concernUserList = Var(List.empty[UserInfo])
   val fanUserList = Var(List.empty[UserInfo])
   val userRecordListRx: Rx[Elem] = returnRecordRX(userRecordList)
-  val currentUser = Var(UserInfo(1,"",AvatarInfo(1,"")))
+  val currentUser = Var(UserInfo(1,"加载中",AvatarInfo(1,"")))
 
   val currentUserRx = currentUser.map{
     case user =>
@@ -145,21 +145,27 @@ case class User(userId: Int) {
 
   val focusStatusRx = isFocus.map{
     r =>
-      <div>
-      if(userName.equals(loginName)){
-        if (r){
-          <div onclick={() => addOrCancelFocus} class="mdui-btn mdui-btn-raised right-btn">取消关注</div>
-        }else{
-          <div onclick={() => addOrCancelFocus} class="mdui-btn mdui-btn-raised right-btn">关注</div>
+      {
+        userName.map(u=>
+        loginName.map{
+          l=>
+            if (l == u){
+              if (r){
+                <div onclick={() => addOrCancelFocus} class="mdui-btn mdui-btn-raised right-btn">取消关注</div>
+              }else{
+                <div onclick={() => addOrCancelFocus} class="mdui-btn mdui-btn-raised right-btn">关注</div>
+              }
+            }else{
+              <div></div>
+            }
         }
+        )
       }
-        </div>
   }
   def app:Node = {
-
+    getCurrentUser
     getRecordListByUser
     getConcernList()
-
     <div id="page-questions" class="mdui-container main">
       <div id="page-user" class="mdui-container">
         <div class="mdui-card cover" style="background-image: url(&quot;https://www.mdui.org/static/common/image/cover/default_l.webp&quot;);">
@@ -167,9 +173,9 @@ case class User(userId: Int) {
           <div class="info">
             {currentUserRx}
             <div class="meta">
-              <a class="following">关注了{focus_num} 人</a>
+              <a mdui-dialog="{target: '#concernUsers'}" class="following">关注了{focus_num} 人</a>
               <span class="mdui-m-x-1">|</span>
-              <a class="followers">{fans_num} 位关注者</a>
+              <a mdui-dialog="{target: '#fansUsers'}" class="followers">{fans_num} 位关注者</a>
             </div>
             {focusStatusRx}
           </div>

@@ -7,9 +7,9 @@ import com.neo.sk.todos2018.shared.ptcl.SuccessRsp
 import io.circe.generic.auto._
 import io.circe.syntax._
 import org.scalajs.dom
+import scala.concurrent.ExecutionContext.Implicits.global
 import org.scalajs.dom.html.Input
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.xml.Node
 
 /**

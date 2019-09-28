@@ -36,6 +36,7 @@ object Routes {
     val cancelLike = base + "/cancelLike"
     val getCurrentUser = base + "/getCurrentUser"
     val addOrCancelFocus = base + "/addOrCancelFocus"
+    val editProfile = base + "/editProfile"
 
   }
 }

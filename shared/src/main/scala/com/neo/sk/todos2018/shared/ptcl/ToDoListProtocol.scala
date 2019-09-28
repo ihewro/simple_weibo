@@ -43,6 +43,10 @@ object ToDoListProtocol {
                      avatar: AvatarInfo
                      )
 
+  case class PostUserReq(
+                          userInfo: UserInfo
+                        )
+
   case class AvatarInfo(
                    id: Int,
                    url: String
@@ -82,6 +86,7 @@ object ToDoListProtocol {
                              msg: String = "Ok"
                            )extends CommonRsp
 
+
   case class GetOtherUserRsp(
                             userInfo: UserInfo,
                             loginName: String,//加上一个当前登录用户的用户名，方便前端进行判断
@@ -95,7 +100,6 @@ object ToDoListProtocol {
                                 errCode: Int = 0,
                                 msg: String = "Ok"
                               )
-
 
 
 }
