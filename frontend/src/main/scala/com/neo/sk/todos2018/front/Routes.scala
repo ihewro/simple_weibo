@@ -31,12 +31,13 @@ object Routes {
     val baseUrl = base + "/user"
     val getConcernList = baseUrl +"/getConcernList"
     val getFansList = baseUrl +"/getFansList"
-    val getLikedUserListByRecordId = base + "/getLikedUserListByRecordId"
-    val addLike = base + "/addLike"
-    val cancelLike = base + "/cancelLike"
-    val getCurrentUser = base + "/getCurrentUser"
-    val addOrCancelFocus = base + "/addOrCancelFocus"
-    val editProfile = base + "/editProfile"
+    val getLikedUserListByRecordId = baseUrl + "/getLikedUserListByRecordId"
+    val addLike = baseUrl + "/addLike"
+    val cancelLike = baseUrl + "/cancelLike"
+    val getCurrentUser = baseUrl + "/getCurrentUser"
+    val addOrCancelFocus = baseUrl + "/addOrCancelFocus"
+    val editProfile = baseUrl + "/editProfile"
+    val getAvatarList = baseUrl + "/getAvatarList"
 
   }
 }

@@ -2209,6 +2209,18 @@ a.avatar img {
     outline: none;
 }
 
+.avatar-choice{
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    margin-right: 22px;
+    outline: none;
+}
+
 a{
     text-decoration: none;
 }

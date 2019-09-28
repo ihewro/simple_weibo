@@ -169,10 +169,10 @@ case class Comment(recordId:Int) {
           <div class="mdui-card mdui-center question mdui-p-t-2">
             <div>
               <div class="mc-user-line">
-                <a class="avatar" href={"/todos2018#/User/" + l.id} style={"background-image: url("+l.userInfo.avatar.url+");"}></a>
+                <a class="avatar" href={"/todos2018#/User/" + l.userInfo.id} style={"background-image: url("+l.userInfo.avatar.url+");"}></a>
                     <div class="info">
                       <div class="username">
-                        <a href={"/todos2018#/User/" + l.id}>{l.userInfo.userName}</a></div>
+                        <a href={"/todos2018#/User/" + l.userInfo.id}>{l.userInfo.userName}</a></div>
                 <div class="headline"></div>
               </div>
               <div class="more">
@@ -215,10 +215,10 @@ case class Comment(recordId:Int) {
         {list.map { l =>
         <div class="item">
           <div class="mc-user-line">
-            <a class="avatar" href={"/todos2018#/User/" + l.id}  style={"background-image: url("+l.userInfo.avatar.url+");"}></a>
+            <a class="avatar" href={"/todos2018#/User/" + l.userInfo.id}  style={"background-image: url("+l.userInfo.avatar.url+");"}></a>
             <div class="info">
               <div class="username">
-                <a href={"/todos2018#/User/" + l.id}>{l.userInfo.userName}</a>
+                <a href={"/todos2018#/User/" + l.userInfo.id}>{l.userInfo.userName}</a>
               </div>
               <div class="headline"></div>
             </div>

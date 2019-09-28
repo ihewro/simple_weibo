@@ -44,13 +44,23 @@ case class User(userId: Int) {
   }
 
   val concernUserListRx = concernUserList.map{
-      case Nil => <div></div>
+      case Nil => <div class="mdui-dialog mc-users-dialog" id="concernUsers">
+        <div class="mdui-dialog-title">
+          <button class="mdui-btn mdui-btn-icon mdui-ripple close" mdui-dialog-close="true">
+            <i class="mdui-icon material-icons">close</i></button>关注了 0 人
+        </div>
+        <div class="mdui-dialog-content">
+          <ul class="mdui-list"></ul>
+          <div class="mc-empty"><div class="title">尚未关注任何用户</div>
+            <div class="description">关注用户后，相应用户就会显示在此处。</div></div>
+        </div>
+      </div>
       case list =>
         <div class="mdui-dialog mc-users-dialog" id="concernUsers">
           <div class="mdui-dialog-title">
             <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-dialog-close="true"><i class="mdui-icon material-icons">close</i></button>关注了 {list.length}人
           </div>
-          <div class="mdui-dialog-content" style="height: 652px;">
+          <div class="mdui-dialog-content">
             <ul class="mdui-list">
           {list.map{
             l=>
@@ -111,7 +121,7 @@ case class User(userId: Int) {
 
   def getRecordListByUser: Unit ={
     val data = GoToCommentReq(userId).asJson.noSpaces
-    Http.postJsonAndParse[GetListRsp](Routes.List.getRecordById,data).map{
+    Http.postJsonAndParse[GetListRsp](Routes.List.getRecordListByUser,data).map{
       case Right(rsp) =>
         if (rsp.errCode == 0){
           userRecordList := rsp.list.get
@@ -149,7 +159,8 @@ case class User(userId: Int) {
         userName.map(u=>
         loginName.map{
           l=>
-            if (l == u){
+            println("登录名称" +l + "当前用户" + u)
+            if (l != u){
               if (r){
                 <div onclick={() => addOrCancelFocus} class="mdui-btn mdui-btn-raised right-btn">取消关注</div>
               }else{

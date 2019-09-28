@@ -12,5 +12,6 @@ object Protocols {
   case class CommonRsp(errCode: Int = 0, msg: String = "ok") extends Response
 
   //解析错误
-  val parseError=ErrorRsp(100101,"parse error")
+  val parseError=ErrorRsp(100101,"json解析错误")
+  val notExitsError=ErrorRsp(100102,"查询对象为空")
 }

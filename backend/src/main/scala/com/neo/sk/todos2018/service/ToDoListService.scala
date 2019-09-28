@@ -97,6 +97,44 @@ trait ToDoListService extends ServiceUtils with SessionBase {
   }
 
 
+
+  private val getRecordListByUser = (path("getRecordListByUser") & post) {
+    userAuth{ user =>
+      entity(as[Either[Error,GoToCommentReq]]){
+        case Left(error) =>
+          log.warn(s"some error: $error")
+          complete(parseError)
+        case Right(req) =>
+          dealFutureResult2 {
+            ToDoListDAO.getRecordListByUser(req.id).map { list =>
+              val data = list.map { r=>
+                //查询该username对象的user信息
+                val users = for {
+                  user <- LoginDAO.getUser(r.userid)
+                  avatar <- LoginDAO.getUserAvatar((user.get.avatarId))
+                } yield (user, avatar)
+
+                users.map {
+                  users2 =>
+                    val user2 = users2._1.get
+                    val avatar = users2._2.get
+                    TaskRecord(r.id, r.content, r.time, UserInfo(user2.id, user2.name, AvatarInfo(avatar.id, avatar.url)))
+                }
+              }
+              val rst = scala.concurrent.Future.sequence(data)
+              rst.map{
+                data =>
+                  complete(GetListRsp(Some(data.toList)))
+              }
+            }
+          }
+      }
+    }
+  }
+
+
+
+
   private val getRecordListByLoginUser = (path("getRecordListByLoginUser") & get) {
     userAuth{ user =>
       dealFutureResult2 {
@@ -280,6 +318,6 @@ trait ToDoListService extends ServiceUtils with SessionBase {
 
   val listRoutes: Route =
     pathPrefix("list") {
-      addRecord ~ delRecord ~ getRecordListByLoginUser ~ goComment ~ getRecordById ~ getCommentListByRecordId ~ addComment ~ getFocusRecordList ~ getRecentHotList
+      addRecord ~ delRecord ~ getRecordListByLoginUser ~ goComment ~ getRecordById ~ getCommentListByRecordId ~ addComment ~ getFocusRecordList ~ getRecentHotList ~ getRecordListByUser
     }
 }

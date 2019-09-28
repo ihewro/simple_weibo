@@ -44,7 +44,8 @@ object ToDoListProtocol {
                      )
 
   case class PostUserReq(
-                          userInfo: UserInfo
+                          password:String,
+                          avatarId :Int
                         )
 
   case class AvatarInfo(
@@ -70,6 +71,12 @@ object ToDoListProtocol {
   ) extends CommonRsp
 
 
+  case class GetAvatarListRsp(
+                             list: Option[List[AvatarInfo]],
+                             currentUseAvatarId: Int, //当前登录用户使用的头像id
+                             errCode: Int = 0,
+                             msg: String = "Ok"
+                             )extends CommonRsp
 
   case class GetLikedUserListRsp(
                              list: Option[List[UserInfo]],
