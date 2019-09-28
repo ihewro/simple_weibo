@@ -47,7 +47,8 @@ object ToDoListDAO{
         log.error(s"empty content")
         Future.successful(-1)
       } else {
-        db.run(tRecordInfo.map(t => (t.author, t.content, t.time)) += (author, content, System.currentTimeMillis()))
+        val test = tRecordInfo.map(t => (t.author, t.content, t.time))
+        db.run(test += (author, content, System.currentTimeMillis()))
       }
     } catch {
       case e: Throwable =>
@@ -81,6 +82,8 @@ object ToDoListDAO{
     }
   }
 
+
+
   def getRecordListByUser(author: String): Future[Seq[rRecordInfo]] = {
     try {
       db.run(tRecordInfo.filter(t => t.author === author).result)
@@ -89,6 +92,29 @@ object ToDoListDAO{
         log.error(s"get recordList error with error $e")
         Future.successful(Nil)
     }
+  }
+
+  def getCommentListByRecordId(recordid: Int):Future[Seq[rComment]] = {
+    try{
+      db.run(tComment.filter(t => t.recordid === recordid).result)
+    }catch {
+      case e:Throwable =>
+        log.error(s"get recordList error with error $e")
+        Future.successful(Nil)
+    }
+  }
+
+  def addComment(recordId:Int, userId:Int, content:String):Future[Int] = {
+    try{
+      val test = tComment.map(t => (t.content,t.userid,t.recordid,t.time))
+      val ok = (Some(content),Some(userId),Some(recordId),Some(System.currentTimeMillis()))
+      db.run(test += ok)
+    }catch {
+      case e:Throwable =>
+        Future.successful(-1)
+    }
+
+
   }
 
 }

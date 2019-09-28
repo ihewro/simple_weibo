@@ -8,6 +8,7 @@ import slick.jdbc.PostgresProfile.api._
 
 import scala.concurrent.Future
 import scala.xml.Null
+import concurrent.ExecutionContext.Implicits.global
 
 object LoginDAO {
 
@@ -33,13 +34,16 @@ object LoginDAO {
   }
 
 
-  def isUser(name: String,password:String): Future[Seq[rUserInfo]] = {
+  def isUser(name: String,password:String): Future[Option[rUserInfo]] = {
     try {
-      db.run(tUserInfo.filter(t => t.name === name).filter(t => t.password === password).result)
+      db.run{
+        tUserInfo.filter(t => t.name === name).filter(t => t.password === password).result
+        tUserInfo.result.headOption
+      }
     } catch {
       case e: Throwable =>
         log.error(s"get recordList error with error $e")
-        Future.successful(Nil)
+        Future.successful(None)
     }
 
   }
@@ -48,6 +52,20 @@ object LoginDAO {
     try {
       db.run {
         tUserInfo.filter(t => t.name === name).result
+        tUserInfo.result.headOption
+      }
+    } catch {
+      case e: Throwable =>
+        log.error(s"get user error with error $e")
+        Future.successful(None)
+    }
+  }
+
+
+  def getUserById(id:Int): Future[Option[rUserInfo]] = {
+    try {
+      db.run {
+        tUserInfo.filter(t => t.id === id).result
         tUserInfo.result.headOption
       }
     } catch {

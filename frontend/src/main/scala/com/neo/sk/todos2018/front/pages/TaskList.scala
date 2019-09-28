@@ -25,11 +25,6 @@ object TaskList{
 
   val taskList = Var(List.empty[TaskRecord])
 
-  def getDeleteButton(id: Int) =  <button class={deleteButton.htmlClass} onclick={()=>deleteRecord(id)}>删除</button>
-  def getCommentButton(id: Int) =  <button class={deleteButton.htmlClass} onclick={()=>commentRecord(id)}>评论</button>
-  def getLikeButton(id: Int) =  <button class={deleteButton.htmlClass} onclick={()=>addLike(id)}>点赞</button>
-
-
 
   def addRecord: Unit = {
     val data = dom.document.getElementById("taskInput").asInstanceOf[TextArea].value
@@ -54,10 +49,6 @@ object TaskList{
   }
 
 
-  def addLike(id: Int): Unit ={
-
-  }
-
   def commentRecord(id: Int): Unit = {
 
     //把当前跳转的评论id存到session里面以便评论页面调用
@@ -78,21 +69,7 @@ object TaskList{
 
   }
 
-  def deleteRecord(id: Int): Unit = {
 
-    val data = DelRecordReq(id).asJson.noSpaces
-    Http.postJsonAndParse[SuccessRsp](Routes.List.delRecord, data).map {
-      case Right(rsp) =>
-        println(rsp)
-        JsFunc.alert("删除成功")
-        getMyList
-
-      case Left(error) =>
-        println(s"parse error,$error")
-
-    }
-
-  }
 
   def getMyList(): Unit = {
     println("getMyList")
@@ -156,37 +133,6 @@ object TaskList{
       </div>
   }
 
-  val taskAllListRx = taskList.map {
-    case Nil => <div id="example3-tab2" style ="margin: 30px; font-size: 17px;">暂无微博</div>
-    case list =>
-
-      <div style ="margin: 20px; font-size: 17px;">
-        {list.map {l =>
-
-        <div class="mdui-row">
-          <div class="mdui-col-sm-12">
-            <div class="mdui-card">
-              <div class="mdui-card-header">
-                  <div class="mdui-card-header-title">Title</div>
-                  <div class="mdui-card-header-subtitle">Subtitle</div>
-                </div>
-
-                <div class="mdui-card-content">{l.content}</div>
-                <div class="mdui-card-actions">
-                  <button class="mdui-btn mdui-ripple" onclick={()=>deleteRecord(l.id)}>删除</button>
-                  <button class="mdui-btn mdui-ripple" onclick={()=>commentRecord(l.id)}>评论 </button>
-                  <button class="mdui-btn mdui-ripple" onclick={()=>addLike(l.id)}>>点赞 </button>
-                </div>
-              </div>
-            </div>
-          </div>
-      }
-        }
-
-    </div>
-  }
-
-
 
 
   def myList: Unit ={
@@ -199,10 +145,9 @@ object TaskList{
 
   def app: xml.Node = {
    getMyList
-  <div>
-
+  <div id="page-questions" class="mdui-container main">
     <div id="page-question">
-      <div class="mdui-card mdui-center question mdui-p-t-3 mdui-p-b-3">
+      <div class="mdui-card mdui-center question mdui-p-t-3 mdui-p-b-1">
         <textarea id ="taskInput" class="mdui-textfield-input" rows="4" placeholder="分享你的灵光时刻"></textarea>
         <div class="actions mdui-m-t-2"><button onclick={()=>addRecord}  class="mdui-btn mdui-btn-raised mdui-text-color-blue">发表</button></div>
       </div>

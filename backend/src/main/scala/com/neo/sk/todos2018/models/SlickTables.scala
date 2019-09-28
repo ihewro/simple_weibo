@@ -14,7 +14,7 @@ trait SlickTables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = tAvatar.schema ++ tComment.schema ++ tRecordInfo.schema ++ tUserInfo.schema ++ tUserRelationship.schema
+  lazy val schema: profile.SchemaDescription = Array(tAvatar.schema, tComment.schema, tRecordInfo.schema, tRecordLikeRelationship.schema, tUserInfo.schema, tUserRelationship.schema).reduceLeft(_ ++ _)
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -42,16 +42,16 @@ trait SlickTables {
   lazy val tAvatar = new TableQuery(tag => new tAvatar(tag))
 
   /** Entity class storing rows of table tComment
-   *  @param id Database column ID SqlType(INTEGER), AutoInc
-   *  @param content Database column CONTENT SqlType(CLOB)
+   *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
+   *  @param content Database column CONTENT SqlType(VARCHAR), Length(20000,true)
    *  @param userid Database column USERID SqlType(INTEGER)
    *  @param recordid Database column RECORDID SqlType(INTEGER)
    *  @param time Database column TIME SqlType(BIGINT) */
-  case class rComment(id: Int, content: Option[java.sql.Clob], userid: Option[Int], recordid: Option[Int], time: Option[Long])
+  case class rComment(id: Int, content: Option[String], userid: Option[Int], recordid: Option[Int], time: Option[Long])
   /** GetResult implicit for fetching rComment objects using plain SQL queries */
-  implicit def GetResultrComment(implicit e0: GR[Int], e1: GR[Option[java.sql.Clob]], e2: GR[Option[Int]], e3: GR[Option[Long]]): GR[rComment] = GR{
+  implicit def GetResultrComment(implicit e0: GR[Int], e1: GR[Option[String]], e2: GR[Option[Int]], e3: GR[Option[Long]]): GR[rComment] = GR{
     prs => import prs._
-      rComment.tupled((<<[Int], <<?[java.sql.Clob], <<?[Int], <<?[Int], <<?[Long]))
+      rComment.tupled((<<[Int], <<?[String], <<?[Int], <<?[Int], <<?[Long]))
   }
   /** Table description of table COMMENT. Objects of this class serve as prototypes for rows in queries. */
   class tComment(_tableTag: Tag) extends profile.api.Table[rComment](_tableTag, "COMMENT") {
@@ -59,10 +59,10 @@ trait SlickTables {
     /** Maps whole row to an option. Useful for outer joins. */
     def ? = ((Rep.Some(id), content, userid, recordid, time)).shaped.<>({r=>import r._; _1.map(_=> rComment.tupled((_1.get, _2, _3, _4, _5)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
-    /** Database column ID SqlType(INTEGER), AutoInc */
-    val id: Rep[Int] = column[Int]("ID", O.AutoInc)
-    /** Database column CONTENT SqlType(CLOB) */
-    val content: Rep[Option[java.sql.Clob]] = column[Option[java.sql.Clob]]("CONTENT")
+    /** Database column ID SqlType(INTEGER), AutoInc, PrimaryKey */
+    val id: Rep[Int] = column[Int]("ID", O.AutoInc, O.PrimaryKey)
+    /** Database column CONTENT SqlType(VARCHAR), Length(20000,true) */
+    val content: Rep[Option[String]] = column[Option[String]]("CONTENT", O.Length(20000,varying=true))
     /** Database column USERID SqlType(INTEGER) */
     val userid: Rep[Option[Int]] = column[Option[Int]]("USERID")
     /** Database column RECORDID SqlType(INTEGER) */
@@ -106,6 +106,37 @@ trait SlickTables {
   }
   /** Collection-like TableQuery object for table tRecordInfo */
   lazy val tRecordInfo = new TableQuery(tag => new tRecordInfo(tag))
+
+  /** Entity class storing rows of table tRecordLikeRelationship
+   *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
+   *  @param recordId Database column RECORD_ID SqlType(INTEGER)
+   *  @param userId Database column USER_ID SqlType(INTEGER) */
+  case class rRecordLikeRelationship(id: Int, recordId: Int, userId: Int)
+  /** GetResult implicit for fetching rRecordLikeRelationship objects using plain SQL queries */
+  implicit def GetResultrRecordLikeRelationship(implicit e0: GR[Int]): GR[rRecordLikeRelationship] = GR{
+    prs => import prs._
+      rRecordLikeRelationship.tupled((<<[Int], <<[Int], <<[Int]))
+  }
+  /** Table description of table RECORD_LIKE_RELATIONSHIP. Objects of this class serve as prototypes for rows in queries. */
+  class tRecordLikeRelationship(_tableTag: Tag) extends profile.api.Table[rRecordLikeRelationship](_tableTag, "RECORD_LIKE_RELATIONSHIP") {
+    def * = (id, recordId, userId) <> (rRecordLikeRelationship.tupled, rRecordLikeRelationship.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = ((Rep.Some(id), Rep.Some(recordId), Rep.Some(userId))).shaped.<>({r=>import r._; _1.map(_=> rRecordLikeRelationship.tupled((_1.get, _2.get, _3.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column ID SqlType(INTEGER), AutoInc, PrimaryKey */
+    val id: Rep[Int] = column[Int]("ID", O.AutoInc, O.PrimaryKey)
+    /** Database column RECORD_ID SqlType(INTEGER) */
+    val recordId: Rep[Int] = column[Int]("RECORD_ID")
+    /** Database column USER_ID SqlType(INTEGER) */
+    val userId: Rep[Int] = column[Int]("USER_ID")
+
+    /** Foreign key referencing tRecordInfo (database name RECORD_LIKE_RELATIONSHIP_RECORD_INFO_ID_FK) */
+    lazy val tRecordInfoFk = foreignKey("RECORD_LIKE_RELATIONSHIP_RECORD_INFO_ID_FK", recordId, tRecordInfo)(r => r.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
+    /** Foreign key referencing tUserInfo (database name RECORD_LIKE_RELATIONSHIP_USER_INFO_ID_FK) */
+    lazy val tUserInfoFk = foreignKey("RECORD_LIKE_RELATIONSHIP_USER_INFO_ID_FK", userId, tUserInfo)(r => r.id, onUpdate=ForeignKeyAction.Restrict, onDelete=ForeignKeyAction.Restrict)
+  }
+  /** Collection-like TableQuery object for table tRecordLikeRelationship */
+  lazy val tRecordLikeRelationship = new TableQuery(tag => new tRecordLikeRelationship(tag))
 
   /** Entity class storing rows of table tUserInfo
    *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey

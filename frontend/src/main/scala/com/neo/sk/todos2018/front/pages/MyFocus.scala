@@ -10,7 +10,7 @@ import scala.xml.Node
 object MyFocus {
 
   def app:Node = {
-    <div>
+    <div id="page-questions" class="mdui-container main">
       {taskMyListRx}
     </div>
   }

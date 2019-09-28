@@ -46,7 +46,7 @@ object Main extends PageSwitcher {
       <div>
         {currentPage}
       </div>
-    mount(dom.document.getElementById("page-questions"), page)
+    mount(dom.document.getElementById("project-container"), page)
   }
 
   def logout(): Unit = {

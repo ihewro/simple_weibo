@@ -16,6 +16,11 @@ object ToDoListProtocol {
   //添加记录
   case class AddRecordReq(content: String)
 
+  case class AddCommentReq(
+                          content: String,
+                          recordId:Int
+                          )
+
   //跳转评论列表
   case class GoToCommentReq(id: Int)
 
@@ -45,8 +50,8 @@ object ToDoListProtocol {
   case class CommentInfo(
                          id: Int,
                          content: String,
-                         userInfo: UserInfo,
                          time: Long,
+                         userInfo: UserInfo
                        )
 
   case class GetTaskRep(
@@ -60,6 +65,13 @@ object ToDoListProtocol {
     msg: String = "Ok"
   ) extends CommonRsp
 
+
+  //返回评论列表的消息结构体
+  case class GetCommentListRsq(
+                                list: Option[List[CommentInfo]],
+                                errCode: Int = 0,
+                                msg: String = "Ok"
+                              )
 
 
 

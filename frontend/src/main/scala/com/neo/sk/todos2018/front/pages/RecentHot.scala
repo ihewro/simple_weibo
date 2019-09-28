@@ -9,7 +9,7 @@ import scala.xml.Node
  */
 object RecentHot {
   def app:Node = {
-    <div>
+    <div id="page-questions" class="mdui-container main">
       {taskMyListRx}
     </div>
   }

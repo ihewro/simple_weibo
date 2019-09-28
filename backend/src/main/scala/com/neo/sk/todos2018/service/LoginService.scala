@@ -44,9 +44,7 @@ trait LoginService extends ServiceUtils with SessionBase {
         dealFutureResult {
           LoginDAO.isUser(req.userName, req.password).map { r =>
             if (r.nonEmpty) {
-              println(r.head)
-              val session = ToDoListSession(UserBaseInfo
-               (req.userName), System.currentTimeMillis())
+              val session = ToDoListSession(UserBaseInfo(r.get.id,req.userName), System.currentTimeMillis())
               addSession(session.toSessionMap){
                 complete(SuccessRsp())
               }
@@ -67,7 +65,8 @@ trait LoginService extends ServiceUtils with SessionBase {
         dealFutureResult {
           LoginDAO.addUser(req.userName, req.password).map { r =>
             if (r > 0) {
-              val session = ToDoListSession(UserBaseInfo(req.userName), System.currentTimeMillis())
+              println("注册的用户id"+r)
+              val session = ToDoListSession(UserBaseInfo(r,req.userName), System.currentTimeMillis())
               addSession(session.toSessionMap){
                 complete(SuccessRsp())
               }

@@ -8,6 +8,7 @@ package com.neo.sk.todos2018.ptcl
   */
 object UserProtocol {
   case class UserBaseInfo(
+                         userid: Int,
                          userName:String
                          )
 }

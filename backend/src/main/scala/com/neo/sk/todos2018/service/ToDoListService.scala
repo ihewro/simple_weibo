@@ -53,6 +53,27 @@ trait ToDoListService extends ServiceUtils with SessionBase {
     }
   }
 
+
+  private val addComment = (path("addComment") & post){
+    userAuth({
+      user =>
+        entity(as[Either[Error,AddCommentReq]]){
+          case Left(error) =>
+            complete(parseError)
+          case Right(req) =>
+            dealFutureResult(
+              ToDoListDAO.addComment(req.recordId,user.userid,req.content).map{ r =>
+                if (r>0){
+                  complete(SuccessRsp())
+                }else{
+                  complete(ErrorRsp(1000101,"添加失败"))
+                }
+              }
+            )
+        }
+    })
+  }
+
   private val delRecord = (path("delRecord") & post) {
     userAuth{ user =>
       entity(as[Either[Error, DelRecordReq]]) {
@@ -146,12 +167,11 @@ trait ToDoListService extends ServiceUtils with SessionBase {
     userAuth{ user =>
       println("开始跳转评论")
       entity(as[Either[Error,GoToCommentReq]]){
-        case Left(error) => {
+        case Left(error) =>
           println(GoToCommentReq)
           println("跳转评论2")
           complete(parseError)
-        }
-        case Right(req) => {
+        case Right(req) =>
           println("跳转评论")
           //把当前点击的评论id存到session中
           val session = goToCommentSession(GoToCommentReq(req.id), System.currentTimeMillis())
@@ -159,16 +179,52 @@ trait ToDoListService extends ServiceUtils with SessionBase {
             println("跳转评论2333")
             complete(SuccessRsp())
           }
-        }
       }
+    }
+  }
 
+  private val getCommentListByRecordId = (path("getCommentListByRecordId") & post){
+    userAuth{
+      user =>
+        println("获取评论列表")
+        entity(as[Either[Error,GoToCommentReq]]){
+          case Left(error) =>
+            complete(parseError)
+          case Right(req) =>
+            dealFutureResult2(
+              ToDoListDAO.getCommentListByRecordId(req.id).map{
+                list =>
+                  val data = list.map{
+                    comment =>
+
+                      val users = for {
+                        user <- LoginDAO.getUserById(comment.userid.get)
+                        avatar <- LoginDAO.getUserAvatar((user.get.avatarId))
+                      } yield (user, avatar)
+
+                      users.map {
+                        users2 =>
+                          val user2 = users2._1.get
+                          val avatar = users2._2.get
+                          CommentInfo(comment.id, comment.content.get, comment.time.get, UserInfo(user2.id, user2.name, AvatarInfo(avatar.id, avatar.url)))
+                      }
+
+                  }
+                  val rst = scala.concurrent.Future.sequence(data)
+                  rst.map{
+                    data =>
+                      complete(GetCommentListRsq(Some(data.toList)))
+                  }
+              }
+            )
+        }
     }
   }
 
 
   val listRoutes: Route =
     pathPrefix("list") {
-      addRecord ~ delRecord ~ getList ~ goComment ~ getRecordById
+      addRecord ~ delRecord ~ getList ~ goComment ~ getRecordById ~ getCommentListByRecordId ~ addComment
     }
 
 }

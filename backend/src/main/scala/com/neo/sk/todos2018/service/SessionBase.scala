@@ -60,6 +60,7 @@ object SessionBase{
         Map(
           SessionTypeKey -> SessionKeys.sessionType,
           SessionKeys.name -> userInfo.userName,
+          SessionKeys.userId -> userInfo.userid.toString,
           SessionKeys.timestamp -> time.toString
         )
       }
@@ -82,7 +83,7 @@ trait SessionBase extends SessionSupport with ServiceUtils{
           }else {
             //匹配session
             Some(ToDoListSession(
-                UserBaseInfo(sessionMap(SessionKeys.name)),
+                UserBaseInfo(sessionMap(SessionKeys.userId).toInt,sessionMap(SessionKeys.name)),
               sessionMap(SessionKeys.timestamp).toLong
             ))
           }

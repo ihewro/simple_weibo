@@ -17,10 +17,11 @@ object Routes {
     val baseUrl = base + "/list"
     val getMyList = baseUrl + "/getList"
     val goComment = baseUrl + "/goComment"
-    val getCommentListById = baseUrl+"/getCommentListById"
+    val getCommentListByRecordId = baseUrl+"/getCommentListByRecordId"
     val getRecordById = baseUrl+"/getRecordById"
     val addRecord = baseUrl + "/addRecord"
     val delRecord = baseUrl + "/delRecord"
+    val addComment = baseUrl + "/addComment"
   }
 
 }
