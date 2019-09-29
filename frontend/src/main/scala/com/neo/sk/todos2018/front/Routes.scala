@@ -40,6 +40,7 @@ object Routes {
     val addOrCancelFocus = baseUrl + "/addOrCancelFocus"
     val editProfile = baseUrl + "/editProfile"
     val getAvatarList = baseUrl + "/getAvatarList"
+    val getRecommendUserList = baseUrl + "/getRecommendUserList"
 
   }
 }

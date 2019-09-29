@@ -28,6 +28,7 @@ object Main extends PageSwitcher {
       case "MyFocus"::Nil => MyFocus.app
       case "RecentHot"::Nil => RecentHot.app
       case "EditProfile"::Nil => EditProfile.app
+      case "recommendFocus"::Nil => recommendFocus.app
       case _ => Login.app
     }
 

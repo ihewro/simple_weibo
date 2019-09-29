@@ -210,9 +210,37 @@ trait UserService extends ServiceUtils with SessionBase {
   }
 
 
+  private val getRecommendUserList = (path("getRecommendUserList") & get){
+    userAuth{
+      user =>
+        dealFutureResult2{
+          UserDao.getRecommendUserList(user.userid).map{
+            list =>
+              val data = list.map{
+                l=>
+                  var flag = false
+                  UserDao.isFocus(l._1.id,user.userid).map{
+                    t =>
+                      if (t.isEmpty){
+                        flag = false
+                      }else{
+                        flag = true
+                      }
+                      FocusUserInfo(UserInfo(l._1.id,l._1.name,AvatarInfo(l._2.id,l._2.url)),flag)
+                  }
+              }.toList
+              val rst = scala.concurrent.Future.sequence(data)
+              rst.map{
+                data =>
+                  complete(GetRecommendUserListRsp(Some(data)))
+              }
+          }
+        }
+    }
+  }
 
   val userRoutes: Route =
     pathPrefix("user") {
-      addOrCancelFocus ~ getCurrentUser ~ getAvatarList ~ editProfile ~ getLikedUserListByRecordId ~ addOrCancelLike ~ getConcernList ~ getFansList
+      addOrCancelFocus ~ getCurrentUser ~ getAvatarList ~ editProfile ~ getLikedUserListByRecordId ~ addOrCancelLike ~ getConcernList ~ getFansList ~ getRecommendUserList
     }
 }

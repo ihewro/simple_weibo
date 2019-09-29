@@ -27,6 +27,7 @@
     <a id="myWeibo" href="#List" class="mdui-ripple mdui-ripple-white">我的微博</a>
     <a id="recentHot" href="#Hot" class="mdui-ripple mdui-ripple-white">近期热门</a>
     <a id="myFocus" href="#Focus" class="mdui-ripple mdui-ripple-white">我的关注</a>
+    <a id="recommendFocus" href="#Focus" class="mdui-ripple mdui-ripple-white">推荐关注</a>
     </div>
     </div>
 
@@ -52,6 +53,12 @@
         //跳转到页面
         window.location.hash = "/MyFocus"
     });
+
+    $("#recommendFocus").on("click", function () {
+        //跳转到页面
+        window.location.hash = "/recommendFocus"
+    });
+
 
     function showMessage(str){
         mdui.snackbar({

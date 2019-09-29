@@ -9,6 +9,7 @@ import mhtml.{Rx, Var}
 import io.circe.generic.auto._
 import io.circe.syntax._
 import org.scalajs.dom
+import com.neo.sk.todos2018.front.pages.recommendFocus.goUser
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.xml.{Elem, Node}
@@ -33,7 +34,7 @@ case class User(userId: Int) {
 
   val currentUserRx = currentUser.map{
     case user =>
-      <div class="mdui-card cover" style="background-image: url(&quot;https://www.mdui.org/static/common/image/cover/default_l.webp&quot;);">
+      <div class="mdui-card cover" style="background-image: url(http://localhost:30330/todos2018/static/avatar/default_bg.jpg);">
         <div class="gradient mdui-card-media-covered mdui-card-media-covered-gradient"></div>
         <div class="info">
       <div>
@@ -86,7 +87,7 @@ case class User(userId: Int) {
             <ul class="mdui-list">
           {list.map{
             l=>
-              <li class="mdui-list-item mdui-ripple">
+              <li class="mdui-list-item mdui-ripple" onclick={()=>goUser(l.id)}>
                 <div class="mdui-list-item-avatar">
                   <img src={l.avatar.url} />
                 </div>
@@ -123,7 +124,7 @@ case class User(userId: Int) {
           <ul class="mdui-list">
             {list.map{
             l=>
-              <li class="mdui-list-item mdui-ripple">
+              <li class="mdui-list-item mdui-ripple" onclick={()=>goUser(l.id)}>
                 <div class="mdui-list-item-avatar">
                   <img src={l.avatar.url} />
                 </div>

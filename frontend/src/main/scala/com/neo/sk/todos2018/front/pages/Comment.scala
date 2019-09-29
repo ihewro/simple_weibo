@@ -140,11 +140,11 @@ case class Comment(recordId:Int) {
       <div class="mdui-p-y-3">
         {list.map{
         l =>
-          <a class="avatar">
+          <a href={"/todos2018#/User/" + l.id} class="avatar" mdui-tooltip={"{content: '"+l.userName+"'}"}>
             <img src={l.avatar.url} />
           </a>
         }}
-        <span class="mdui-text-color-black-secondary">等人觉得很赞</span>
+        <span class="mdui-text-color-black-secondary">{list.length}人觉得很赞</span>
       </div>
 
   }
@@ -186,7 +186,7 @@ case class Comment(recordId:Int) {
                 <div class="headline"></div>
               </div>
               <div class="more">
-                <span class="time" title="2019-09-26 17:11:16">{TimeTool.dateFormatDefault(l.time)}</span></div>
+                <span class="time">{TimeTool.dateFormatDefault(l.time)}</span></div>
               </div>
               <div class="mdui-typo content">
                 {l.content}

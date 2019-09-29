@@ -25,6 +25,11 @@ object ToDoListProtocol {
   case class GoToCommentReq(id: Int)
 
 
+  case class FocusUserInfo (
+                             userInfo: UserInfo,
+                             isFocus: Boolean
+  )
+
   case class DelRecordReq(id: Int)
 
 
@@ -72,6 +77,7 @@ object ToDoListProtocol {
   ) extends CommonRsp
 
 
+
   case class GetAvatarListRsp(
                              list: Option[List[AvatarInfo]],
                              loginName: String,
@@ -108,7 +114,12 @@ object ToDoListProtocol {
                                 list: Option[List[CommentInfo]],
                                 errCode: Int = 0,
                                 msg: String = "Ok"
-                              )
+                              )extends CommonRsp
 
+  case class GetRecommendUserListRsp(
+                                      list: Option[List[FocusUserInfo]],
+                                      errCode: Int = 0,
+                                      msg: String = "Ok"
+                                    )extends CommonRsp
 
 }

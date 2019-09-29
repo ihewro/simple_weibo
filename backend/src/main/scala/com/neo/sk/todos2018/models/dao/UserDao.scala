@@ -15,6 +15,19 @@ object UserDao {
   private val log = LoggerFactory.getLogger(this.getClass)
 
 
+  def getRecommendUserList(userId: Int) :Future[Seq[(rUserInfo,rAvatar)]] = {
+    try{
+      val q = for{
+        user <- tUserInfo if user.id =!= userId //过滤到当前登录的用户
+        avatar <- tAvatar if avatar.id === user.avatarId
+      }yield (user,avatar)
+      db.run(q.result)
+    }catch {
+      case e:Throwable =>
+        log.error(s"get recordList error with error $e")
+        Future.successful(Nil)
+    }
+  }
 
   def getConcernList(userId:Int):Future[Seq[(rUserInfo,rAvatar)]] = {
     val q = for{
