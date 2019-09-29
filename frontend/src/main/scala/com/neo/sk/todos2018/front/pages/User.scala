@@ -21,24 +21,46 @@ case class User(userId: Int) {
 
   val fans_num = Var(0)//粉丝数目
   val focus_num = Var(0)//关注者数目
-  val isFocus = Var(false)
-  val loginName = Var("")
-  val userName = Var("")
+  var isFocus = false
+  var loginName = ""
+  var userName = ""
 
   val userRecordList = Var(List.empty[TaskRecord])
   val concernUserList = Var(List.empty[UserInfo])
   val fanUserList = Var(List.empty[UserInfo])
   val userRecordListRx: Rx[Elem] = returnRecordRX(userRecordList)
-  val currentUser = Var(UserInfo(1,"加载中",AvatarInfo(1,"")))
+  val currentUser = Var(UserInfo(1,"加载中",AvatarInfo(1,"http://localhost:30330/todos2018/static/avatar/5.jpg")))
 
   val currentUserRx = currentUser.map{
     case user =>
+      <div class="mdui-card cover" style="background-image: url(&quot;https://www.mdui.org/static/common/image/cover/default_l.webp&quot;);">
+        <div class="gradient mdui-card-media-covered mdui-card-media-covered-gradient"></div>
+        <div class="info">
       <div>
         <div class="avatar-box">
           <img src={user.avatar.url} class="avatar" />
         </div>
         <div class="username">
           {user.userName}
+        </div>
+      </div>
+          <div class="meta">
+            <a mdui-dialog="{target: '#concernUsers'}" class="following">关注了{focus_num} 人</a>
+            <span class="mdui-m-x-1">|</span>
+            <a mdui-dialog="{target: '#fansUsers'}" class="followers">{fans_num} 位粉丝</a>
+          </div>
+          {
+          println("当前登录"+ userName + "登录用户" + loginName)
+          if (userName != loginName){
+            if (isFocus){
+              <div onclick={() => addOrCancelFocus} class="mdui-btn mdui-btn-raised right-btn">取消关注</div>
+            }else{
+              <div onclick={() => addOrCancelFocus} class="mdui-btn mdui-btn-raised right-btn">关注</div>
+            }
+          }else{
+            <div></div>
+          }
+          }
         </div>
       </div>
   }
@@ -81,7 +103,7 @@ case class User(userId: Int) {
 
 
   val fanUserListRx = fanUserList.map{
-    case Nil => <div class="mdui-dialog mc-users-dialog" id="concernUsers">
+    case Nil => <div class="mdui-dialog mc-users-dialog" id="fansUsers">
       <div class="mdui-dialog-title">
         <button class="mdui-btn mdui-btn-icon mdui-ripple close" mdui-dialog-close="true">
           <i class="mdui-icon material-icons">close</i></button> 0 个粉丝
@@ -93,7 +115,7 @@ case class User(userId: Int) {
       </div>
     </div>
     case list =>
-      <div class="mdui-dialog mc-users-dialog" id="concernUsers">
+      <div class="mdui-dialog mc-users-dialog" id="fansUsers">
         <div class="mdui-dialog-title">
           <button class="mdui-btn mdui-btn-icon mdui-ripple" mdui-dialog-close="true"><i class="mdui-icon material-icons">close</i></button> {list.length} 个粉丝
         </div>
@@ -115,7 +137,7 @@ case class User(userId: Int) {
       </div>
   }
 
-  def getConcernList(): Unit ={
+  def getConcernList: Unit ={
     val data = GoToCommentReq(userId).asJson.noSpaces
     Http.postJsonAndParse[GetUserListRsp](Routes.User.getConcernList,data).map{
       case Right(rsp) =>
@@ -132,7 +154,7 @@ case class User(userId: Int) {
   }
 
 
-  def fansList: Unit ={
+  def getFansList: Unit ={
     val data = GoToCommentReq(userId).asJson.noSpaces
     Http.postJsonAndParse[GetUserListRsp](Routes.User.getFansList,data).map{
       case Right(rsp) =>
@@ -155,10 +177,10 @@ case class User(userId: Int) {
     Http.postJsonAndParse[GetOtherUserRsp](Routes.User.getCurrentUser,data).map{
       case Right(rsp) =>
         if (rsp.errCode == 0){
-          currentUser := rsp.userInfo
-          isFocus := rsp.isFocus
-          userName := rsp.userInfo.userName
-          loginName := rsp.loginName
+          isFocus = rsp.isFocus
+          userName = rsp.userInfo.userName
+          loginName = rsp.loginName
+          currentUser := rsp.userInfo//必须放在最后，不然前面变量更新无法及时的更新！！
         }else{
           JsFunc.alert(rsp.msg)
           dom.window.location.hash = s"#/Login"
@@ -191,9 +213,13 @@ case class User(userId: Int) {
     Http.postJsonAndParse[SuccessRsp](Routes.User.addOrCancelFocus,data).map{
       case Right(rsp) =>
         if (rsp.errCode == 0){
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
+          //刷新数据
+          getCurrentUser
+          getConcernList
+          getFansList
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }
@@ -203,46 +229,17 @@ case class User(userId: Int) {
 
   }
 
-  val focusStatusRx = isFocus.map{
-    r =>
-      {
-        userName.map(u=>
-        loginName.map{
-          l=>
-            println("登录名称" +l + "当前用户" + u)
-            if (l != u){
-              if (r){
-                <div onclick={() => addOrCancelFocus} class="mdui-btn mdui-btn-raised right-btn">取消关注</div>
-              }else{
-                <div onclick={() => addOrCancelFocus} class="mdui-btn mdui-btn-raised right-btn">关注</div>
-              }
-            }else{
-              <div></div>
-            }
-        }
-        )
-      }
-  }
   def app:Node = {
     getCurrentUser
     getRecordListByUser
-    getConcernList()
+    getConcernList
+    getFansList
     <div id="page-questions" class="mdui-container main">
       <div id="page-user" class="mdui-container">
-        <div class="mdui-card cover" style="background-image: url(&quot;https://www.mdui.org/static/common/image/cover/default_l.webp&quot;);">
-          <div class="gradient mdui-card-media-covered mdui-card-media-covered-gradient"></div>
-          <div class="info">
-            {currentUserRx}
-            <div class="meta">
-              <a mdui-dialog="{target: '#concernUsers'}" class="following">关注了{focus_num} 人</a>
-              <span class="mdui-m-x-1">|</span>
-              <a mdui-dialog="{target: '#fansUsers'}" class="followers">{fans_num} 位关注者</a>
-            </div>
-            {focusStatusRx}
-          </div>
-        </div>
+        {currentUserRx}
         {userRecordListRx}
         {concernUserListRx}
+        {fanUserListRx}
       </div>
     </div>
   }

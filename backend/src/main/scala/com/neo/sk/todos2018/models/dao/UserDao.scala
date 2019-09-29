@@ -98,7 +98,8 @@ object UserDao {
       for{
         r <- db.run{tUserRelationship.filter(t=> t.dageId === dageId).filter(t=> t.xiaodiId === xiaodiId).result.headOption}
       }yield  if (r.isEmpty){//如果没有关联则增加关联
-        db.run{tUserRelationship.map(t=> (t.dageId,t.xiaodiId)) += (dageId,xiaodiId)}
+        db.run{tUserRelationship.map(t=> (t.dageId,t.xiaodiId,t.time)) += (dageId,xiaodiId,System.currentTimeMillis())}
+        println("添加关注成功")
       }else{//取消关联
         db.run{tUserRelationship.filter(t=> t.dageId === dageId).filter(t=> t.xiaodiId === xiaodiId).delete}
       }
@@ -129,9 +130,9 @@ object UserDao {
   }
 
   //是否关注了对方
-  def isFocus(userId:Int,xiaodiId:Int) :Future[Option[rUserRelationship]] ={
+  def isFocus(dageId:Int,xiaodiId:Int) :Future[Option[rUserRelationship]] ={
     db.run{
-      tUserRelationship.filter(t=> t.dageId === userId).filter(t=> t.xiaodiId === xiaodiId).result.headOption
+      tUserRelationship.filter(t=> t.dageId === dageId).filter(t=> t.xiaodiId === xiaodiId).result.headOption
     }
   }
 

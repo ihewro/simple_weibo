@@ -34,7 +34,7 @@ trait UserService extends ServiceUtils with SessionBase {
             UserDao.addOrCancelFocus(req.id,user.userid).map{
               t=>
                 if(t>0){
-                  complete(SuccessRsp())
+                  complete(SuccessRsp(0,"操作成功"))
                 }else{
                   complete(ErrorRsp(1000101, "点赞操作失败"))
                 }
@@ -58,7 +58,7 @@ trait UserService extends ServiceUtils with SessionBase {
                     complete(notExitsError)
                   }else{
                     dealFutureResult(
-                      UserDao.isFocus(user.userid,req.id).map{
+                      UserDao.isFocus(req.id,user.userid).map{
                         re =>
                           var flag = false
                           if (re.isEmpty){

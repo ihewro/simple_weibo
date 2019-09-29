@@ -261,9 +261,13 @@ trait ToDoListService extends ServiceUtils with SessionBase {
   private val getFocusRecordList = (path("getFocusRecordList") & get){
     userAuth{
       user =>
-        dealFutureResult2(
-          ToDoListDAO.getRecordListByUser(user.userid).map{ list=>
+        dealFutureResult2{
+          println("登录用户id" + user.userid)
+          ToDoListDAO.getFocusRecordByUser(user.userid).map{ list=>
+
+            println("关注的人微博数目"+list.length)
             val data = list.map { r=>
+
               //查询该username对象的user信息
               val users = for {
                 user <- LoginDAO.getUser(r.userid)
@@ -283,7 +287,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
                 complete(GetListRsp(Some(data.toList),user.userName))
             }
           }
-        )
+      }
     }
   }
 

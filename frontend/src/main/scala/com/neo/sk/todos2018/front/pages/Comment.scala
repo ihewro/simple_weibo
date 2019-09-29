@@ -165,7 +165,8 @@ case class Comment(recordId:Int) {
       }}
   }
   val taskListRx = currentTask.map {
-    case Nil => <div style ="margin: 30px; font-size: 17px;">加载中……</div>
+    case Nil => <div style ="margin: 30px;"><div class="mdui-spinner mdui-spinner-colorful"></div>
+    </div>
     case list =>
       <div>
         {list.map {l =>

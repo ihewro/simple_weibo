@@ -21,6 +21,6 @@ package object ptcl {
 
   final case class SuccessRsp(
                                errCode: Int = 0,
-                               msg: String = "ok"
+                               msg: String = "好"
                              ) extends CommonRsp
 }

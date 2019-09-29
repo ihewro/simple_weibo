@@ -27,6 +27,9 @@ object Routes {
     val addComment = baseUrl + "/addComment"
   }
 
+  /**
+   * @see package com.neo.sk.todos2018.service.UserService
+   */
   object User{
     val baseUrl = base + "/user"
     val getConcernList = baseUrl +"/getConcernList"

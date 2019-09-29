@@ -83,11 +83,11 @@ object ToDoListDAO{
     }
   }
 
-  def getFocusRecordByUser(id:Int):Future[Seq[rRecordInfo]] = {
+  def getFocusRecordByUser(xiaodiId:Int):Future[Seq[rRecordInfo]] = {
     try {
       val result = for{
-        j <-  tUserRelationship
-        i <- tRecordInfo if j.xiaodiId == i.userid
+        j <-  tUserRelationship if j.xiaodiId === xiaodiId
+        i <- tRecordInfo if i.userid === j.dageId
       }yield i
       db.run(result.result)
     }catch {

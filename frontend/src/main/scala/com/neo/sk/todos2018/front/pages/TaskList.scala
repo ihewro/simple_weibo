@@ -36,7 +36,8 @@ object TaskList{
       Http.postJsonAndParse[SuccessRsp](Routes.List.addRecord, AddRecordReq(data).asJson.noSpaces).map {
         case Right(rsp) =>
           if(rsp.errCode == 0) {
-            JsFunc.showMessage("添加成功！")
+            dom.document.getElementById("taskInput").asInstanceOf[TextArea].value = ""//清空文本
+            JsFunc.showMessage("发布成功！")
             getMyList
           } else {
             JsFunc.showMessage("添加失败！")
