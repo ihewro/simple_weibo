@@ -100,7 +100,7 @@ object ToDoListDAO{
 
   def getRecordListByUser(author: Int): Future[Seq[rRecordInfo]] = {
     try {
-      db.run(tRecordInfo.filter(t => t.userid === author).result)
+      db.run(tRecordInfo.filter(t => t.userid === author).sortBy(_.time.desc).result)
     } catch {
       case e: Throwable =>
         log.error(s"get recordList error with error $e")
