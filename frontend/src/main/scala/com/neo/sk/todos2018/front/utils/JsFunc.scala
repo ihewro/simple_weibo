@@ -24,5 +24,7 @@ object JsFunc extends js.Object{
 
   def showMessage(str: String): Unit = js.native
 
+  def closeDialog(select :String) :Unit = js.native
+
 
 }

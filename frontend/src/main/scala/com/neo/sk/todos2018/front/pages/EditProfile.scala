@@ -31,7 +31,7 @@ object EditProfile {
           JsFunc.showMessage("修改成功")
           dom.window.location.hash = s"#/List"
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }
@@ -48,7 +48,7 @@ object EditProfile {
           currentUse := rsp.currentUseAvatarId
           loginName := rsp.loginName
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }

@@ -25,12 +25,12 @@ object RecentHot {
         if (rsp.errCode == 0){
           recentTaskList := rsp.list.get
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }
       case Left(error) =>
-        println(s"get  error,$error")
+        println(s"get recentHot  error,$error")
     }
   }
 

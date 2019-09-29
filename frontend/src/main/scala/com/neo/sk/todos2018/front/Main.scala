@@ -52,10 +52,11 @@ object Main extends PageSwitcher {
           dom.window.location.hash = "/Login"
         }
         else{
-          JsFunc.alert(s"退出失败：${rsp.msg}")
+          JsFunc.showMessage(s"退出失败：${rsp.msg}")
+          dom.window.location.hash = "/Login"
         }
       case Left(error) =>
-        JsFunc.alert(s"parse error,$error")
+        JsFunc.showMessage(s"parse error,$error")
     }
   }
 

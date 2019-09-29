@@ -40,7 +40,8 @@ object TaskList{
             JsFunc.showMessage("发布成功！")
             getMyList
           } else {
-            JsFunc.showMessage("添加失败！")
+            dom.window.location.hash = s"#/Login"
+            JsFunc.showMessage(rsp.msg)
             println(rsp.msg)
           }
         case Left(error) =>
@@ -61,7 +62,7 @@ object TaskList{
           //跳转到评论页面
           dom.window.location.hash = s"#/Detail/"+id
         } else {
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           println(rsp.msg)
         }
       case Left(error) =>
@@ -79,11 +80,12 @@ object TaskList{
         if(rsp.errCode == 0){
           taskList := rsp.list.get
         } else {
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }
       case Left(error) =>
+        JsFunc.showMessage("没有内容")
         println(s"get task list error,$error")
     }
   }

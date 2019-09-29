@@ -25,7 +25,7 @@ object Http {
     } catch {
       case e: Exception =>
         val errMsg = Shortcut.errorDetailMsg(e)
-        JsFunc.alert(s"jsHeader errMsg: $errMsg")
+        JsFunc.showMessage(s"jsHeader errMsg: $errMsg")
         throw e
     }
   }
@@ -38,7 +38,7 @@ object Http {
     } catch {
       case e: Exception =>
         val errMsg = Shortcut.errorDetailMsg(e)
-        JsFunc.alert(s"jsHeader errMsg: $errMsg")
+        JsFunc.showMessage(s"jsHeader errMsg: $errMsg")
         throw e
     }
   }
@@ -63,7 +63,7 @@ object Http {
     } catch {
       case e: Exception =>
         val errorDetailMsg = Shortcut.errorDetailMsg(e)
-        JsFunc.alert(s"sendJsonPost errMsg: $errorDetailMsg")
+        JsFunc.showMessage(s"sendJsonPost errMsg: $errorDetailMsg")
         throw e
     }
 
@@ -89,7 +89,7 @@ object Http {
     } catch {
       case e: Exception =>
         val errorDetailMsg = Shortcut.errorDetailMsg(e)
-        JsFunc.alert(s"sendJsonPost errMsg: $errorDetailMsg")
+        JsFunc.showMessage(s"sendJsonPost errMsg: $errorDetailMsg")
         throw e
     }
 
@@ -133,7 +133,7 @@ object Http {
     } catch {
       case e: Exception =>
         val errorDetailMsg = Shortcut.errorDetailMsg(e)
-        JsFunc.alert(s"sendGet errMsg: $errorDetailMsg")
+        JsFunc.showMessage(s"sendGet errMsg: $errorDetailMsg")
         throw e
     }
 
@@ -186,7 +186,7 @@ object Http {
     } catch {
       case e: Exception =>
         val errorDetailMsg = Shortcut.errorDetailMsg(e)
-        JsFunc.alert(s"sendGet errMsg: $errorDetailMsg")
+        JsFunc.showMessage(s"sendGet errMsg: $errorDetailMsg")
         throw e
     }
   }

@@ -110,7 +110,7 @@ trait SessionBase extends SessionSupport with ServiceUtils{
       BasicDirectives.provide(None)
   }
 
-  def noSessionError(message:String = "no session") = ErrorRsp(1000102,s"$message")
+  def noSessionError(message:String = "没有登录信息") = ErrorRsp(1000102,s"$message")
 
   //用户认证
   def userAuth(f: UserBaseInfo => server.Route) = loggingAction { ctx =>

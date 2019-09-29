@@ -24,7 +24,7 @@ object MyFocus {
         if (rsp.errCode == 0 ){
           focusTaskList := rsp.list.get
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }

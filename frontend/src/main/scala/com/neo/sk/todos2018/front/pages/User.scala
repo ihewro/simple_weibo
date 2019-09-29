@@ -145,7 +145,7 @@ case class User(userId: Int) {
         concernUserList := rsp.list.get
         focus_num := rsp.list.get.length
       }else{
-        JsFunc.alert(rsp.msg)
+        JsFunc.showMessage(rsp.msg)
         dom.window.location.hash = s"#/Login"
         println(rsp.msg)
       }
@@ -162,7 +162,7 @@ case class User(userId: Int) {
           fanUserList := rsp.list.get
           fans_num := rsp.list.get.length
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }
@@ -182,7 +182,7 @@ case class User(userId: Int) {
           loginName = rsp.loginName
           currentUser := rsp.userInfo//必须放在最后，不然前面变量更新无法及时的更新！！
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }
@@ -198,7 +198,7 @@ case class User(userId: Int) {
         if (rsp.errCode == 0){
           userRecordList := rsp.list.get
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }

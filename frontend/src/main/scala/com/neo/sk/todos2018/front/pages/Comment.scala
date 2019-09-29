@@ -47,7 +47,7 @@ case class Comment(recordId:Int) {
           likedUserList := rsp.list.get
           isLiked := rsp.isLike
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }
@@ -62,7 +62,12 @@ case class Comment(recordId:Int) {
     val data = GoToCommentReq(recordId).asJson.noSpaces
     Http.postJsonAndParse[GetCommentListRsq](Routes.List.getCommentListByRecordId,data).map{
       case Right(rsp) =>
-        commentList := rsp.list.get
+        if (rsp.errCode == 0){
+          commentList := rsp.list.get
+        }else{
+          JsFunc.showMessage(rsp.msg)
+          dom.window.location.hash = s"#/Login"
+        }
       case Left(error) =>
         println(s"get  error,$error")
     }
@@ -116,9 +121,10 @@ case class Comment(recordId:Int) {
       case Right(rsp) =>
         if (rsp.errCode == 0){
           JsFunc.showMessage("添加成功")
+          JsFunc.closeDialog("#page-answer-editor")
           getChildCommentList
         }else{
-          JsFunc.alert(rsp.msg)
+          JsFunc.showMessage(rsp.msg)
           dom.window.location.hash = s"#/Login"
           println(rsp.msg)
         }
@@ -165,7 +171,7 @@ case class Comment(recordId:Int) {
       }}
   }
   val taskListRx = currentTask.map {
-    case Nil => <div style ="margin: 30px;"><div class="mdui-spinner mdui-spinner-colorful"></div>
+    case Nil => <div style ="margin: 30px;"><div class="mdui-spinner mdui-spinner-colorful mdui-center"></div>
     </div>
     case list =>
       <div>
