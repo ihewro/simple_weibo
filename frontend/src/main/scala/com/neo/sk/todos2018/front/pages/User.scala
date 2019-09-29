@@ -46,7 +46,7 @@ case class User(userId: Int) {
         </div>
       </div>
           <div class="meta">
-            <a mdui-dialog="{target: '#concernUsers'}" class="following">关注了{focus_num} 人</a>
+            <a mdui-dialog="{target: '#concernUsers',history:false}" class="following">关注了{focus_num} 人</a>
             <span class="mdui-m-x-1">|</span>
             <a mdui-dialog="{target: '#fansUsers'}" class="followers">{fans_num} 位粉丝</a>
           </div>

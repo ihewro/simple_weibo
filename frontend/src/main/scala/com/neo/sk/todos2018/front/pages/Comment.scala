@@ -32,7 +32,7 @@ case class Comment(recordId:Int) {
       case Right(rsp) =>
         currentTask := rsp.list.get
         userName := rsp.list.get.head.userInfo.userName
-        loginName := rsp.loginName
+        loginName := rsp.loginName.getOrElse("")
       case Left(error) =>
         println(s"get  error,$error")
     }
@@ -140,7 +140,8 @@ case class Comment(recordId:Int) {
       <div class="mdui-p-y-3">
         {list.map{
         l =>
-          <a href={"/todos2018#/User/" + l.id} class="avatar" mdui-tooltip={"{content: '"+l.userName+"'}"}>
+          <a href={"/todos2018#/User/" + l.id} class="avatar avatar-info">
+            <span class="avatar-name">{l.userName}</span>
             <img src={l.avatar.url} />
           </a>
         }}
@@ -152,9 +153,9 @@ case class Comment(recordId:Int) {
   val optionStatusRx = isLiked.map{
     t=>
     {if(t){
-      <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent" onclick={() => cancelWebLike}>取消点赞</button>
+      <button class="mdui-btn mdui-btn-raised" onclick={() => cancelWebLike}>取消点赞</button>
     }else{
-      <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent" onclick={() => addWeiboLike}>点赞</button>
+      <button class="mdui-btn mdui-btn-raised" onclick={() => addWeiboLike}>点赞</button>
     }}
   }
 
@@ -164,7 +165,7 @@ case class Comment(recordId:Int) {
         u =>
           println(l + "|" + u + "|" + haveDeleteButton)
           if (l == u) {
-            <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent" onclick={() => deleteRecord()}>删除</button>
+            <button class="mdui-btn mdui-btn-raised" onclick={() => deleteRecord()}>删除</button>
           }else{
               <div></div>
             }
@@ -194,7 +195,7 @@ case class Comment(recordId:Int) {
               <div class="actions">
                 {deleteStatusRx}
                 {optionStatusRx}
-                <button mdui-dialog="{target: '#page-answer-editor'}" class="mdui-btn mdui-btn-raised mdui-color-theme-accent">评论</button>
+                <button mdui-dialog="{target: '#page-answer-editor',history:false }" class="mdui-btn mdui-btn-raised mdui-color-theme-accent">评论</button>
               </div>
               {likedUserListRx}
             </div>
@@ -218,7 +219,7 @@ case class Comment(recordId:Int) {
 
   val commentRx = commentList.map{
     case Nil =>
-      <div class="mc-empty"><div class="title">没有人撩你</div><div class="description"></div></div>
+      <div class="mc-empty"><div class="title">nobody……</div><div class="description"></div></div>
     case list => <div>
       <div class="mdui-typo-headline answers-count">共 {list.length} 个评论</div>
       <div class="mdui-card mdui-center answers">

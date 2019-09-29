@@ -58,7 +58,7 @@ object Login{
         </div>
         <form>
           <div class="mdui-textfield mdui-textfield-floating-label mdui-textfield-has-bottom mdui-textfield-not-empty">
-            <label class="mdui-textfield-label">用户名或邮箱</label>
+            <label class="mdui-textfield-label">用户名</label>
             <input class="mdui-textfield-input" id="userName" name="name" type="text" required="true" />
             <div class="mdui-textfield-error">
               账号不能为空
@@ -72,7 +72,7 @@ object Login{
             </div>
           </div>
           <div class="actions mdui-clearfix">
-            <button type="button" onclick = {()=> userLoginAndRegister("register")} class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-left">注册</button>
+            <button type="button" onclick = {()=> userLoginAndRegister("register")} class="mdui-btn mdui-btn-raised mdui-float-left">注册</button>
             <button type="button" onclick = {()=> userLoginAndRegister("login")} class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-float-right">登录</button>
           </div>
         </form>

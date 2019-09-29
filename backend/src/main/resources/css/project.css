@@ -1130,7 +1130,8 @@ body {
     background-color: rgba(0, 0, 0, 0.12);
 }
 #page-question .question .content {
-    padding: 48px 0 16px 0;
+    padding: 60px 0px 0px 0px;
+    display: flex;
 }
 #page-question .question .actions {
     margin-bottom: 16px;
@@ -2223,4 +2224,21 @@ a.avatar img {
 
 a{
     text-decoration: none;
+}
+
+.avatar-info{
+    display: inline-flex;
+    -ms-flex-direction: column;
+    flex-direction: column-reverse;
+    -ms-flex-pack: center;
+    justify-content: space-around;
+}
+
+.avatar-name{
+    line-height: 18px;
+    font-size: 13px;
+    color: rgba(0,0,0,.54);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

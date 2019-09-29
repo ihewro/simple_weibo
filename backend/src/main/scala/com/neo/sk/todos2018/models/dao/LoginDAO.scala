@@ -24,7 +24,8 @@ object LoginDAO {
         Future.successful(-1)
       } else {
         val user = rUserInfo(-1,name,password,System.currentTimeMillis())
-        db.run(tUserInfo += user)
+        val t = (tUserInfo returning tUserInfo.map(_.id)) += user//返回自增主键
+        db.run(t)
       }
     } catch {
       case e: Throwable =>

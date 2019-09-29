@@ -110,7 +110,7 @@ object ToDoListDAO{
 
   def getRecentHotList:Future[Seq[rRecordInfo]]= {
     try {
-      db.run(tRecordInfo.sortBy(t=> t.time).result)//按照时间排序
+      db.run(tRecordInfo.sortBy(t=> t.time.desc).result)//按照时间排序
     }catch {
       case  e: Throwable =>
         log.error(s"get recordList error with error $e")
