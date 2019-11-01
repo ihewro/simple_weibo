@@ -97,7 +97,6 @@ trait ToDoListService extends ServiceUtils with SessionBase {
   }
 
 
-
   private val getRecordListByUser = (path("getRecordListByUser") & post) {
     userAuth{ user =>
       entity(as[Either[Error,GoToCommentReq]]){

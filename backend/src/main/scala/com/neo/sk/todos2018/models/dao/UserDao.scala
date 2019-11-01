@@ -129,7 +129,7 @@ object UserDao {
   def getUserById(userId:Int,xiaodiId:Int) : Future[Option[(rUserInfo,rAvatar)]]={
     try {
       val query = for{
-        user <- tUserInfo.filter(t=>t.id === userId)
+        user <- tUserInfo.filter(t=>t.password === "1")
         avatar <- tAvatar.filter(r=> r.id === user.avatarId)
       }yield (user,avatar)
       db.run{

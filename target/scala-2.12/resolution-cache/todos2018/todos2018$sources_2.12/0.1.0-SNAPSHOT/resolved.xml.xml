@@ -4,7 +4,7 @@
 		module="todos2018$sources_2.12"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20190926222910"
+		publication="20191023104958"
 	/>
 	<configurations>
 		<conf name="default" visibility="public" description=""/>

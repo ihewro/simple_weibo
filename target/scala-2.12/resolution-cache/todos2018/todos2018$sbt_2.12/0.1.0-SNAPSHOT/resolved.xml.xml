@@ -4,7 +4,7 @@
 		module="todos2018$sbt_2.12"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20190926222909"
+		publication="20191023104955"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>
